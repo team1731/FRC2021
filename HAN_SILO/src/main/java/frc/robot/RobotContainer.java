@@ -148,7 +148,12 @@ public class RobotContainer {
       //.whileActiveContinuous(new JoystickShooter(m_shootclimb, () -> m_operatorController.getRawAxis(4)), false
       //.whileActiveContinuous(new ShootSeqCommand(m_shootclimb, m_sequencer, () -> m_operatorController.getRawAxis(4)), false
     //);
-    
+
+    // scale drive speed according to axis 5 (but only when switch 12 is UP)
+    new JoystickButton(m_operatorController, 12)
+      .whileActiveContinuous(() -> m_robotDrive.setDriveSpeedScaler(m_operatorController.getRawAxis(5)))
+      .whenInactive(() -> m_robotDrive.setDriveSpeedScaler(1));
+
     new JoystickButton(m_operatorController, 15).whileActiveContinuous(
       new IntakeSeqCommand(m_intake, m_sequencer)
     );

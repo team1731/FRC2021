@@ -55,6 +55,8 @@ public class DriveSubsystem extends SubsystemBase {
   private final AnalogInput leftRearAbsEncoder;
   private final AnalogInput rightRearAbsEncoder;
   
+  private double driveSpeedScaler = 1.0;
+
   //Robot swerve modules
   private final SwerveModule m_leftFront = 
       new SwerveModule(DriveConstants.kLeftFrontDriveMotorPort,
@@ -105,6 +107,9 @@ public class DriveSubsystem extends SubsystemBase {
     m_timer.start();
   }
 
+  public void setDriveSpeedScaler(double axis){
+    this.driveSpeedScaler = 0.5 * (axis + 1);
+  }
 
   public ReflectingCSVWriter getCSVWriter() {
     return mCSVWriter1;
@@ -219,6 +224,9 @@ public class DriveSubsystem extends SubsystemBase {
       rotAdjusted = 0;
     }
 */
+    xSpeedAdjusted *= this.driveSpeedScaler;
+    ySpeedAdjusted *= this.driveSpeedScaler;
+
     if(Math.abs(rotationalOutput) < 0.1){
       rotationalOutput = 0;
     }
