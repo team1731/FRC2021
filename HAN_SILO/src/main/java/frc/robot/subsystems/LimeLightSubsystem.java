@@ -94,6 +94,6 @@ public class LimeLightSubsystem extends SubsystemBase {
     }
 
     public void disableLED(){
-        //limeLED.setNumber(1);
+        limeLED.setNumber(1);
     }
 }
