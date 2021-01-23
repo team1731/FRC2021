@@ -95,8 +95,9 @@ public class Robot extends TimedRobot {
     
     SmartDashboard.putBoolean("Vis_HasTarget", false);
     SmartDashboard.putNumber("Vis_TargetAngle", 0);
-    SmartDashboard.putString("Vis_TargetString", "Empty");
-    SmartDashboard.putString("Vis_TargetProcessed", "Empty");
+    //Old data for JeVois
+    //SmartDashboard.putString("Vis_TargetString", "Empty");
+    //SmartDashboard.putString("Vis_TargetProcessed", "Empty");
   }
 
   /**

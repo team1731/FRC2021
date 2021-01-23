@@ -258,6 +258,7 @@ public class DriveSubsystem extends SubsystemBase {
       //Perhaps do the same continuous correction here as above? Test first.
     if(!stickControlledHeading){
       rotationalOutput = headingController.calculate(getHeading());
+      SmartDashboard.putNumber("HeadingController Output", rotationalOutput);
     } else {
       headingController.reset(getHeading());
     }

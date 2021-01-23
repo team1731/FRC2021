@@ -34,7 +34,7 @@ public class RotToPowerPortCommand extends CommandBase {
         if(m_vision.hasTarget()){
             SmartDashboard.putBoolean("Vis_HasTarget", true);
             
-            double targetAngle = m_drive.getHeading() + m_vision.getLastTarget().getX();
+            double targetAngle = m_drive.getHeading() - m_vision.getLastTarget().getY();
             SmartDashboard.putNumber("Vis_TargetAngle", targetAngle);
             m_drive.setHeadingControllerGoal(targetAngle);
         } else {
