@@ -46,7 +46,9 @@ public class LimeLightSubsystem extends SubsystemBase {
     private NetworkTableEntry limeValidTargets;
     private NetworkTableEntry limeLED;
 
-    private LimeTargetInfo lastTarget;
+    private LimeTargetInfo lastTarget = LimeTargetInfo.empty;
+
+    private int ledQueries = 0;
 
     public LimeLightSubsystem() {
         limeTable = NetworkTableInstance.getDefault().getTable("limelight");
@@ -58,7 +60,7 @@ public class LimeLightSubsystem extends SubsystemBase {
         limeValidTargets = limeTable.getEntry("tv");
         limeLED = limeTable.getEntry("ledMode");
 
-        disableLED();
+        disableLED(false);
     }
 
     @Override
@@ -83,9 +85,20 @@ public class LimeLightSubsystem extends SubsystemBase {
 
     public void enableLED(){
         limeLED.setNumber(3);
+        ledQueries++;
     }
 
     public void disableLED(){
-        limeLED.setNumber(1);
+        disableLED(true);
+    }
+
+    private void disableLED(boolean trackQuery){
+        if(trackQuery){
+            ledQueries--;
+        }
+
+        if(ledQueries <= 0){
+            limeLED.setNumber(1);
+        }
     }
 }
