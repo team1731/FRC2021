@@ -296,6 +296,14 @@ public final class Constants {
         public static final double kCameraPitchAngleDegrees = 0;
         public static final double kCameraYawAngleDegrees = 0;
 
+        public static final double kDriveP = 0.05;
+        public static final double kDriveI = 0;
+        public static final double kDriveD = 0;
+        public static final double kDriveMaxSpeed = 0.1;
+        public static final double kDriveMaxAcceleration = 0.1;
+        public static final double kDriveTolerance = 0.5;
+        public static final double kDriveAccelerationTolerance = 0.1;
+
     }
 
     public static final class DriveConstantsOrig {
