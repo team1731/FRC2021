@@ -240,7 +240,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     if(visionDistanceOverride){
-      ySpeedAdjusted = visionDistanceController.calculate(m_vision.getLastTarget().getZ());
+      xSpeedAdjusted = visionDistanceController.calculate(m_vision.getLastTarget().getZ());
       SmartDashboard.putNumber("distanceController Output", ySpeedAdjusted);
     } else {
       visionDistanceController.reset(m_vision.getLastTarget().getZ());

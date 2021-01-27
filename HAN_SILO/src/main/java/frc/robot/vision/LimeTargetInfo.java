@@ -11,6 +11,8 @@ public class LimeTargetInfo {
     private double boxLength;
     private double boxWidth;
 
+    public static LimeTargetInfo empty = new LimeTargetInfo(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+
     public LimeTargetInfo(double y, double z, double area, double hor, double vert, double timestamp){
         this.y = y;
         this.z = z;
