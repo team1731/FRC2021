@@ -7,13 +7,13 @@ import frc.robot.Constants.XboxConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LimeLightSubsystem;
 
-public class RotToPowerPortCommand extends CommandBase {
+public class VisionRotateCommand extends CommandBase {
 
     private final LimeLightSubsystem m_vision;
     private final DriveSubsystem m_drive;
     private final XboxController m_driverController;
 
-    public RotToPowerPortCommand(LimeLightSubsystem visionSubsystem, DriveSubsystem driveSubsystem, XboxController driveController){
+    public VisionRotateCommand(LimeLightSubsystem visionSubsystem, DriveSubsystem driveSubsystem, XboxController driveController){
         m_vision = visionSubsystem;
         m_drive = driveSubsystem;
         m_driverController = driveController;
