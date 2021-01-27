@@ -69,8 +69,8 @@ public class Robot extends TimedRobot {
     camServer.startAutomaticCapture();
     
     m_ledstring = new LedStringSubsystem();
-    m_robotDrive = new DriveSubsystem();
     m_vision = new LimeLightSubsystem();
+    m_robotDrive = new DriveSubsystem(m_vision);
     m_intake = new IntakeSubsystem(m_ledstring);
     m_sequencer = new SequencerSubsystem(m_ledstring);
     m_shootclimb = new ShootClimbSubsystem(m_ledstring);
