@@ -7,10 +7,18 @@ public class LimeTargetInfo {
     private double z;
     private double timestamp;
 
-    public LimeTargetInfo(double y, double z, double timestamp){
+    private double area;
+    private double boxLength;
+    private double boxWidth;
+
+    public LimeTargetInfo(double y, double z, double area, double hor, double vert, double timestamp){
         this.y = y;
         this.z = z;
         this.timestamp = timestamp;
+
+        this.area = area;
+        this.boxLength = vert;
+        this.boxWidth = hor;
     }
 
     /**
@@ -44,6 +52,30 @@ public class LimeTargetInfo {
      */
     public double getTimeCaptured(){
         return timestamp;
+    }
+
+    /**
+     * Returns the area of the bounding box around the target in percentage of image (0-100%). Camera resolution is 320x240.
+     * @return
+     */
+    public double getArea(){
+        return area;
+    }
+
+    /**
+     * Returns the length of the bounding box around the target in pixels.
+     * @return
+     */
+    public double getLength(){
+        return boxLength;
+    }
+
+    /**
+     * Returns the width of the bounding box around the target in pixels.
+     * @return
+     */
+    public double getWidth(){
+        return boxWidth;
     }
 
 }

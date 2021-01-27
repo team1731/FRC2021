@@ -1,27 +1,12 @@
 package frc.robot.subsystems;
 
 import frc.robot.Constants.VisionConstants;
-import frc.robot.vision.GoalTracker;
-import frc.robot.vision.JevoisVisionServer;
-import frc.robot.vision.JevoisVisionUpdate;
 import frc.robot.vision.LimeTargetInfo;
-import frc.robot.vision.ShooterAimingParameters;
-import frc.robot.vision.TargetInfo;
-import frc.robot.vision.GoalTracker.TrackReport;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Transform2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -48,17 +33,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 */
 
 /**
- * This function adds vision updates (from the Nexus smartphone) to a list in RobotState. This helps keep track of goals
- * detected by the vision system. The code to determine the best goal to shoot at and prune old Goal tracks is in
- * GoalTracker.java
- * 
- * @see GoalTracker.java
+ * This subsystem stores the last target coordinates and allows for easy control over the LED
  */
 public class LimeLightSubsystem extends SubsystemBase {
 
     private NetworkTable limeTable;
     private NetworkTableEntry limeTX;
     private NetworkTableEntry limeTY;
+    private NetworkTableEntry limeArea;
+    private NetworkTableEntry limeHoriz;
+    private NetworkTableEntry limeVert;
     private NetworkTableEntry limeValidTargets;
     private NetworkTableEntry limeLED;
 
@@ -68,6 +52,9 @@ public class LimeLightSubsystem extends SubsystemBase {
         limeTable = NetworkTableInstance.getDefault().getTable("limelight");
         limeTX = limeTable.getEntry("tx");
         limeTY = limeTable.getEntry("ty");
+        limeArea = limeTable.getEntry("ta");
+        limeHoriz = limeTable.getEntry("thor");
+        limeVert = limeTable.getEntry("tvert");
         limeValidTargets = limeTable.getEntry("tv");
         limeLED = limeTable.getEntry("ledMode");
 
@@ -76,8 +63,13 @@ public class LimeLightSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putBoolean("Vis_HasTarget", hasTarget());
         if(hasTarget()){
-            lastTarget = new LimeTargetInfo(limeTX.getDouble(0), limeTY.getDouble(0), Timer.getFPGATimestamp());
+            lastTarget = new LimeTargetInfo(limeTX.getDouble(0), limeTY.getDouble(0), Timer.getFPGATimestamp(), 
+                                            limeArea.getDouble(0), limeVert.getDouble(0), limeHoriz.getDouble(0));
+            SmartDashboard.putString("Vis_TargetPos", lastTarget.getY()+", "+lastTarget.getZ());
+        } else {
+            SmartDashboard.putString("Vis_TargetPos", "N/A");
         }
     }
 
