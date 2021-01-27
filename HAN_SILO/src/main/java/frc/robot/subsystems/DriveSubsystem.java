@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.util.AutoSwerveDebug;
 import frc.robot.util.ReflectingCSVWriter;
 import frc.robot.util.SwerveModuleDebug;;
@@ -38,15 +39,22 @@ public class DriveSubsystem extends SubsystemBase {
   private final ReflectingCSVWriter<AutoSwerveDebug> mCSVWriter1;
   private final ReflectingCSVWriter<SwerveModuleDebug> mCSVWriter2;
 
-  private final ProfiledPIDController headingController
+  private LimeLightSubsystem m_vision;
+  
+  private final ProfiledPIDController visionHeadingController
      = new ProfiledPIDController(DriveConstants.kTurnP, DriveConstants.kTurnI, DriveConstants.kTurnD,
        new TrapezoidProfile.Constraints(DriveConstants.kMaxTurnVelocity, DriveConstants.kMaxTurnAcceleration));
+
+  private final ProfiledPIDController visionDistanceController
+     = new ProfiledPIDController(VisionConstants.kDriveP, VisionConstants.kDriveI, VisionConstants.kDriveD,
+       new TrapezoidProfile.Constraints(VisionConstants.kDriveMaxSpeed, VisionConstants.kDriveMaxAcceleration));
 
   //After looking inside the ProfiledPIDController class, I suspect that a standard PIDController will work better as ProfiledPID seems to primarily use the
   //trapezoid profiler to calculate the next output rather than the PID. Since trapezoid profiler doesn't have continuous input it just ignores it.
   //private final PIDController headingControllerPID = new PIDController(DriveConstants.kTurnP, DriveConstants.kTurnI, DriveConstants.kTurnD);
 
   private boolean visionHeadingOverride = false;
+  private boolean visionDistanceOverride = false;
   
   private final AnalogInput leftFrontAbsEncoder;
   private final AnalogInput rightFrontAbsEncoder;
@@ -84,7 +92,7 @@ public class DriveSubsystem extends SubsystemBase {
   /**
    * Creates a new DriveSubsystem.
    */
-  public DriveSubsystem() {
+  public DriveSubsystem(LimeLightSubsystem m_vision) {
 
     leftFrontAbsEncoder = new AnalogInput(0);
     rightFrontAbsEncoder = new AnalogInput(1);
@@ -96,13 +104,17 @@ public class DriveSubsystem extends SubsystemBase {
         System.err.println("\n\nAt least one absolute encoder (AnalogInput(0)--AnalogInput(3) is NULL!!!\n\n");
       }
     }
-    headingController.setTolerance(DriveConstants.kTurnToleranceDeg, DriveConstants.kTurnRateToleranceDegPerS);
+    visionHeadingController.setTolerance(DriveConstants.kTurnToleranceDeg, DriveConstants.kTurnRateToleranceDegPerS);
+    visionDistanceController.setTolerance(VisionConstants.kDriveTolerance, VisionConstants.kDriveAccelerationTolerance);
+    visionDistanceController.setGoal(0);
     //headingController.enableContinuousInput(-180, 180);
 
     mCSVWriter1 = new ReflectingCSVWriter<>(AutoSwerveDebug.class);
     mCSVWriter2 = new ReflectingCSVWriter<>(SwerveModuleDebug.class);
     m_timer.reset();
     m_timer.start();
+
+    this.m_vision = m_vision;
   }
 
   public void setDriveSpeedScaler(double axis){
@@ -213,6 +225,7 @@ public class DriveSubsystem extends SubsystemBase {
     xSpeedAdjusted *= this.driveSpeedScaler;
     ySpeedAdjusted *= this.driveSpeedScaler;
 
+    //Thumbstick clamping
     if(Math.abs(rotationalOutput) < 0.1){
       rotationalOutput = 0;
     }
@@ -220,10 +233,17 @@ public class DriveSubsystem extends SubsystemBase {
     rotationalOutput *= Math.PI;
 
     if(visionHeadingOverride){
-      rotationalOutput = headingController.calculate(getHeading());
-      SmartDashboard.putNumber("HeadingController Output", rotationalOutput);
+      rotationalOutput = visionHeadingController.calculate(getHeading());
+      SmartDashboard.putNumber("headingController Output", rotationalOutput);
     } else {
-      headingController.reset(getHeading());
+      visionHeadingController.reset(getHeading());
+    }
+
+    if(visionDistanceOverride){
+      ySpeedAdjusted = visionDistanceController.calculate(m_vision.getLastTarget().getZ());
+      SmartDashboard.putNumber("distanceController Output", ySpeedAdjusted);
+    } else {
+      visionDistanceController.reset(m_vision.getLastTarget().getZ());
     }
     
 
@@ -387,8 +407,12 @@ public class DriveSubsystem extends SubsystemBase {
     visionHeadingOverride = visionOverride;
   }
 
-  public void setHeadingControllerGoal(double newGoal){
-    headingController.setGoal(newGoal);
+  public void setVisionDistanceOverride(boolean visionOverride){
+    visionDistanceOverride = visionOverride;
+  }
+
+  public void setVisionHeadingGoal(double newGoal){
+    visionHeadingController.setGoal(newGoal);
   }
 
 

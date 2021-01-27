@@ -30,7 +30,7 @@ public class VisionRotateCommand extends CommandBase {
         if(m_vision.hasTarget()){
             double targetAngle = m_drive.getHeading() - m_vision.getLastTarget().getY();
             SmartDashboard.putNumber("Vis_TargetAngle", targetAngle);
-            m_drive.setHeadingControllerGoal(targetAngle);
+            m_drive.setVisionHeadingGoal(targetAngle);
         }
     }
 
