@@ -45,10 +45,8 @@ public class DriveSubsystem extends SubsystemBase {
   //After looking inside the ProfiledPIDController class, I suspect that a standard PIDController will work better as ProfiledPID seems to primarily use the
   //trapezoid profiler to calculate the next output rather than the PID. Since trapezoid profiler doesn't have continuous input it just ignores it.
   //private final PIDController headingControllerPID = new PIDController(DriveConstants.kTurnP, DriveConstants.kTurnI, DriveConstants.kTurnD);
-  
-  //private double headingControllerOutput = 0;
 
-  private boolean stickControlledHeading = true;
+  private boolean visionHeadingOverride = false;
   
   private final AnalogInput leftFrontAbsEncoder;
   private final AnalogInput rightFrontAbsEncoder;
@@ -125,21 +123,9 @@ public class DriveSubsystem extends SubsystemBase {
     return Rotation2d.fromDegrees(m_gyro.getAngle() * (DriveConstants.kGyroReversed ? -1.0 : 1.0));
   }
 
-  /*
-  /**
-   * @return the headingControllerOutput
-  public double getHeadingControllerOutput() {
-    return headingControllerOutput;
-  }
-  */
-
   @Override
   public void periodic() {
     resumeCSVWriter();
-
-    //SmartDashboard.putNumber("headingController In", getHeading());
-    //headingControllerOutput = headingController.calculate(MathUtil.clamp(getHeading(), -180, 180));
-    //SmartDashboard.putNumber("headingController Out", headingControllerOutput);
 
     // Update the odometry in the periodic block
     double headingRadians = Math.toRadians(getHeading());
@@ -233,36 +219,12 @@ public class DriveSubsystem extends SubsystemBase {
 
     rotationalOutput *= Math.PI;
 
-    /*
-    if(stickControlledHeading){
-      //If the stick is released, don't change the rotation
-      if((Math.abs(rightX) > DriveConstants.kMinRightStickThreshold || Math.abs(rightY) > DriveConstants.kMinRightStickThreshold)){
-        double stickAngle = getStickAngle(rightX, rightY);
-        double heading = getHeading();
-
-        //Continuous correction
-        //This assumes that positive is COUNTERclockwise, which may be wrong... the fix should be simply reversing the signs
-        if((stickAngle - heading) > 180){
-          stickAngle -= 360;
-        } else if((stickAngle - heading) < -180){
-          stickAngle += 360;
-        }
-        SmartDashboard.putNumber("bdlheading", heading); 
-        SmartDashboard.putNumber("bdlstick", stickAngle); 
-        rotationalOutput = headingController.calculate(heading, stickAngle);
-      } else {
-        headingController.reset(getHeading());
-      }
-    } else {
-      */
-      //Perhaps do the same continuous correction here as above? Test first.
-    if(!stickControlledHeading){
+    if(visionHeadingOverride){
       rotationalOutput = headingController.calculate(getHeading());
       SmartDashboard.putNumber("HeadingController Output", rotationalOutput);
     } else {
       headingController.reset(getHeading());
     }
-    //}
     
 
     //Replaced rotAdjusted with rotationalOutput
@@ -421,8 +383,8 @@ public class DriveSubsystem extends SubsystemBase {
    * Determines if the right thumbstick on the driver controller can control the robot's orientation.
    * Set to false if you want another subsystem to control the orientation in teleop (e.x. vision)
    */
-  public void setStickControlledHeading(boolean controlledHeading){
-    stickControlledHeading = controlledHeading;
+  public void setVisionHeadingOverride(boolean visionOverride){
+    visionHeadingOverride = visionOverride;
   }
 
   public void setHeadingControllerGoal(double newGoal){
