@@ -141,6 +141,9 @@ public class RobotContainer {
     new JoystickButton(m_driverController, XboxConstants.kRBumper)
       .whenActive(new VisionRotateCommand(m_vision, m_robotDrive, m_driverController));
 
+    new JoystickButton(m_driverController, XboxConstants.kLBumper)
+      .whenActive(new VisionDistanceCommand(m_vision, m_robotDrive, m_driverController));
+
     new JoystickButton(m_operatorController, 8) // convert -1 to +1 TO 0 to 1
       .whileActiveContinuous(() -> m_shootclimb.spinShooter((m_operatorController.getRawAxis(4)+1)/2))
       .whenInactive(() -> m_shootclimb.stopShooting());
