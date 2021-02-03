@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import frc.robot.Constants.VisionConstants;
 import frc.robot.vision.LimeTargetInfo;
 
 import edu.wpi.first.networktables.NetworkTable;
