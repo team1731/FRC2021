@@ -29,6 +29,7 @@ public class VisionDistanceCommand extends CommandBase {
     public void execute(){
         if(m_vision.hasTarget()){
             //Perhaps change the shooter motor speed to the optimal speed
+            //Vision driving automatically happens while setVisionDistanceOverride is true
         }
     }
 
