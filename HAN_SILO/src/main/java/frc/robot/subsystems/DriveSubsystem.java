@@ -42,8 +42,8 @@ public class DriveSubsystem extends SubsystemBase {
   private LimeLightSubsystem m_vision;
   
   private final ProfiledPIDController visionHeadingController
-     = new ProfiledPIDController(DriveConstants.kTurnP, DriveConstants.kTurnI, DriveConstants.kTurnD,
-       new TrapezoidProfile.Constraints(DriveConstants.kMaxTurnVelocity, DriveConstants.kMaxTurnAcceleration));
+     = new ProfiledPIDController(VisionConstants.kTurnP, VisionConstants.kTurnI, VisionConstants.kTurnD,
+       new TrapezoidProfile.Constraints(VisionConstants.kMaxTurnVelocity, VisionConstants.kMaxTurnAcceleration));
 
   private final ProfiledPIDController visionDistanceController
      = new ProfiledPIDController(VisionConstants.kDriveP, VisionConstants.kDriveI, VisionConstants.kDriveD,
@@ -104,7 +104,7 @@ public class DriveSubsystem extends SubsystemBase {
         System.err.println("\n\nAt least one absolute encoder (AnalogInput(0)--AnalogInput(3) is NULL!!!\n\n");
       }
     }
-    visionHeadingController.setTolerance(DriveConstants.kTurnToleranceDeg, DriveConstants.kTurnRateToleranceDegPerS);
+    visionHeadingController.setTolerance(VisionConstants.kTurnToleranceDeg, VisionConstants.kTurnRateToleranceDegPerS);
     visionDistanceController.setTolerance(VisionConstants.kDriveTolerance, VisionConstants.kDriveAccelerationTolerance);
     visionDistanceController.setGoal(0);
     //headingController.enableContinuousInput(-180, 180);

@@ -62,17 +62,7 @@ public final class Constants {
 
     public static final boolean kGyroReversed = true; //09FEB false;
 
-    public static final double kMaxTurnVelocity = 360;
-    public static final double kMaxTurnAcceleration = 360;
-
-    public static final double kTurnP = 0.05;
-    public static final double kTurnI = 0;
-    public static final double kTurnD = 0;
-
     public static final double kMinRightStickThreshold = 0.7;
-
-    public static final double kTurnToleranceDeg = 5;
-    public static final double kTurnRateToleranceDegPerS = 10; // degrees per second
 
     // These are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!
     // These characterization values MUST be determined either experimentally or theoretically
@@ -296,6 +286,7 @@ public final class Constants {
         public static final double kCameraPitchAngleDegrees = 0;
         public static final double kCameraYawAngleDegrees = 0;
 
+        //#region DrivePID
         public static final double kDriveP = 0.05;
         public static final double kDriveI = 0;
         public static final double kDriveD = 0;
@@ -303,6 +294,17 @@ public final class Constants {
         public static final double kDriveMaxAcceleration = 0.1;
         public static final double kDriveTolerance = 0.5;
         public static final double kDriveAccelerationTolerance = 0.1;
+        //#endregion
+
+        //#region TurnPID
+        public static final double kTurnP = 0.05;
+        public static final double kTurnI = 0;
+        public static final double kTurnD = 0;
+        public static final double kMaxTurnVelocity = 360;
+        public static final double kMaxTurnAcceleration = 360;
+        public static final double kTurnToleranceDeg = 5;
+        public static final double kTurnRateToleranceDegPerS = 10; // degrees per second
+        //#endregion
 
     }
 
