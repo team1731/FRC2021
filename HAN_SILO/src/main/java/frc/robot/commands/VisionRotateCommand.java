@@ -7,6 +7,9 @@ import frc.robot.Constants.XboxConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LimeLightSubsystem;
 
+/**
+ * Rotates the robot towards a vision target
+ */
 public class VisionRotateCommand extends CommandBase {
 
     private final LimeLightSubsystem m_vision;
@@ -21,12 +24,14 @@ public class VisionRotateCommand extends CommandBase {
 
     @Override
     public void initialize(){
+        //Turn on LED and tell the DriveSubsystem to take turning control away from driver
         m_drive.setVisionHeadingOverride(true);
         m_vision.enableLED();
     }
 
     @Override
     public void execute(){
+        //Update the turning PID goal if a valid target exists
         if(m_vision.hasTarget()){
             double targetAngle = m_drive.getHeading() - m_vision.getLastTarget().getY();
             SmartDashboard.putNumber("Vis_TargetAngle", targetAngle);
@@ -36,6 +41,7 @@ public class VisionRotateCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted){
+        //Turn off LED and give control back to driver
         m_drive.setVisionHeadingOverride(false);
         m_vision.disableLED();
     }

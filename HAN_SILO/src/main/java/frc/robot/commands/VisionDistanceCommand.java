@@ -1,12 +1,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LimeLightSubsystem;
 
+/**
+ * Moves the robot to the optimal shooting distance
+ */
 public class VisionDistanceCommand extends CommandBase {
 
     private final LimeLightSubsystem m_vision;
@@ -21,6 +23,7 @@ public class VisionDistanceCommand extends CommandBase {
 
     @Override
     public void initialize(){
+        //Turn on LED and start the forward/backward control
         m_drive.setVisionDistanceOverride(true);
         m_vision.enableLED();
     }
@@ -35,6 +38,7 @@ public class VisionDistanceCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted){
+        //Turn off the LED and stop the forward/backward control
         m_drive.setVisionDistanceOverride(false);
         m_vision.disableLED();
     }
