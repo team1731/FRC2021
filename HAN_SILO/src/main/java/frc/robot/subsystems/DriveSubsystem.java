@@ -263,69 +263,6 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
-   * Turns the robot to a heading read from the gyro
-   * @param heading The gyro angle from -180 to 180
-   * @deprecated Was used for old and impractical turn-to-angle control mode
-   */
-  @Deprecated
-  public double getStickAngle(double stickX, double stickY){
-      double stickAngle = Math.toDegrees(Math.atan2(stickY, stickX));
-      stickAngle -= 90;
-      
-      //SmartDashboard.putNumber("getStickAngle Raw", stickAngle);
-
-      //Don't know of Math.atan2 does this automatically. Check smartdashboard
-      /*
-      if((stickX < 0 && stickY >= 0) || (stickX < 0 && stickY < 0)){
-        stickAngle += 180;
-      } else if(stickX > 0 && stickY < 0){
-        stickAngle += 360;
-      }
-      */
-
-      //If the angle is greater than 180, mirror and invert it to keep the -180-180 heading angle (see getHeading())
-      if(stickAngle < -180){
-            stickAngle += 360;
-      }
-      
-      stickAngle *= -1;
-
-      //SmartDashboard.putNumber("getStickAngle Clamped", stickAngle);
-
-      /*
-
-      Currently, we need to find the quickest turn from -179 to 179 in heading. So in reality, 
-      this is only a 2 degree difference
-      However, the robot is spinning all the way around...
-
-
-
-      */
-
-      return stickAngle;
-
-      //JavaScript from a cartesian to polar coordinate converter:
-      //Tbh drives me mad just a little with the lack of an OR and the fact that there's an if statement that just does nothing
-      /*
-      var x = $j('#x').val();
- 	var y = $j('#y').val();
- 	var r = Math.pow((Math.pow(x,2) + Math.pow(y,2)),0.5);
- 	var theta = Math.atan(y/x)*360/2/Math.PI;
- 	if (x >= 0 && y >= 0) {
- 		theta = theta;
- 	} else if (x < 0 && y >= 0) {
- 		theta = 180 + theta;
- 	} else if (x < 0 && y < 0) {
- 		theta = 180 + theta;
- 	} else if (x > 0 && y < 0) {
- 		theta = 360 + theta;
-   } 
-   */
-      
-      
-  }
-
-  /**
    * Sets the swerve ModuleStates.
    *
    * @param desiredStates The desired SwerveModule states.
