@@ -30,7 +30,8 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.util.AutoSwerveDebug;
 import frc.robot.util.ReflectingCSVWriter;
-import frc.robot.util.SwerveModuleDebug;;
+import frc.robot.util.SwerveModuleDebug;
+import frc.robot.util.Utils;;
 
 @SuppressWarnings("PMD.ExcessiveImports")
 public class DriveSubsystem extends SubsystemBase {
@@ -240,7 +241,8 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     if(visionDistanceOverride){
-      xSpeedAdjusted = visionDistanceController.calculate(m_vision.getLastTarget().getZ());
+      //This allows the driver to still have forward/backward control of the robot while getting to optimal shooting in case something is in the way
+      xSpeedAdjusted = Utils.Clamp(xSpeedAdjusted + visionDistanceController.calculate(m_vision.getLastTarget().getZ()), 0, 1);
       SmartDashboard.putNumber("distanceController Output", ySpeedAdjusted);
     } else {
       visionDistanceController.reset(m_vision.getLastTarget().getZ());
@@ -263,7 +265,9 @@ public class DriveSubsystem extends SubsystemBase {
   /**
    * Turns the robot to a heading read from the gyro
    * @param heading The gyro angle from -180 to 180
+   * @deprecated Was used for old and impractical turn-to-angle control mode
    */
+  @Deprecated
   public double getStickAngle(double stickX, double stickY){
       double stickAngle = Math.toDegrees(Math.atan2(stickY, stickX));
       stickAngle -= 90;
