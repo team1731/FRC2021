@@ -249,13 +249,13 @@ public class DriveSubsystem extends SubsystemBase {
     }
     
 
-    //Replaced rotAdjusted with rotationalOutput
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
           xSpeedAdjusted, ySpeedAdjusted, rotationalOutput, getAngle())
             : new ChassisSpeeds(xSpeedAdjusted, ySpeedAdjusted, rotationalOutput)
     );
     SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+    SmartDashboard.putNumber("SwerveModuleAzimuthState", swerveModuleStates[0].angle.getDegrees());
     m_leftFront.setDesiredState(swerveModuleStates[0]);    // leftFront, rightFront, leftRear, rightRear
     m_rightFront.setDesiredState(swerveModuleStates[1]);
     m_leftRear.setDesiredState(swerveModuleStates[2]);
