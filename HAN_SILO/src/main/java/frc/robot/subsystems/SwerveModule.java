@@ -88,6 +88,7 @@ public class SwerveModule {
   
       m_turningMotor = new CANSparkMax(turningMotorChannel, MotorType.kBrushless);
       m_turningMotor.restoreFactoryDefaults();
+      m_turningMotor.setSmartCurrentLimit(40, 40);
    //   m_turningMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus0, 5);
     //  m_turningMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 5);
     //  m_turningMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 10);
@@ -193,6 +194,7 @@ public double getDriveEncoderPosition(){
    * @param state Desired state with speed and angle.
    */
   public void setDesiredState(SwerveModuleState state) {
+    //Assuming this commented block was example code and we wrote our own - SCH2021
     // Calculate the drive output from the drive PID controller.
     //final var driveOutput = m_drivePIDController.calculate(
     //    m_driveEncoder.getRate(), state.speedMetersPerSecond);
