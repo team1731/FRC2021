@@ -42,7 +42,9 @@ public class DriveSubsystem extends SubsystemBase {
 
   private LimeLightSubsystem m_vision;
   
-  private final ProfiledPIDController visionHeadingController
+  private double desiredHeading = 0;
+
+  private final ProfiledPIDController headingController
      = new ProfiledPIDController(VisionConstants.kTurnP, VisionConstants.kTurnI, VisionConstants.kTurnD,
        new TrapezoidProfile.Constraints(VisionConstants.kMaxTurnVelocity, VisionConstants.kMaxTurnAcceleration));
 
@@ -105,10 +107,10 @@ public class DriveSubsystem extends SubsystemBase {
         System.err.println("\n\nAt least one absolute encoder (AnalogInput(0)--AnalogInput(3) is NULL!!!\n\n");
       }
     }
-    visionHeadingController.setTolerance(VisionConstants.kTurnToleranceDeg, VisionConstants.kTurnRateToleranceDegPerS);
+    headingController.setTolerance(VisionConstants.kTurnToleranceDeg, VisionConstants.kTurnRateToleranceDegPerS);
     visionDistanceController.setTolerance(VisionConstants.kDriveTolerance, VisionConstants.kDriveAccelerationTolerance);
     visionDistanceController.setGoal(0);
-    //headingController.enableContinuousInput(-180, 180);
+    headingController.enableContinuousInput(-180, 180);
 
     mCSVWriter1 = new ReflectingCSVWriter<>(AutoSwerveDebug.class);
     mCSVWriter2 = new ReflectingCSVWriter<>(SwerveModuleDebug.class);
@@ -234,11 +236,22 @@ public class DriveSubsystem extends SubsystemBase {
     rotationalOutput *= Math.PI;
 
     if(visionHeadingOverride){
-      rotationalOutput = visionHeadingController.calculate(getHeading());
+      rotationalOutput = headingController.calculate(getHeading());
+      desiredHeading = getHeading();
       SmartDashboard.putNumber("headingController Output", rotationalOutput);
     } else {
-      visionHeadingController.reset(getHeading());
+      headingController.reset(getHeading());
+      //desiredHeading += rotationalOutput*2.5;
+      //rotationalOutput = headingController.calculate(getHeading(), desiredHeading);
+      //SmartDashboard.putNumber("desiredHeading", desiredHeading);
+      //SmartDashboard.putNumber("headingController Output", rotationalOutput);
     }
+
+    /*
+    if(Math.abs(rotationalOutput) < 0.1){
+      rotationalOutput = 0;
+    }
+    */
 
     if(visionDistanceOverride){
       //This allows the driver to still have forward/backward control of the robot while getting to optimal shooting in case something is in the way
@@ -353,7 +366,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void setVisionHeadingGoal(double newGoal){
-    visionHeadingController.setGoal(newGoal);
+    headingController.setGoal(newGoal);
   }
 
 
@@ -373,6 +386,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void resetGyro() {
     if(m_gyro != null){
+      desiredHeading = 0;
       m_gyro.reset();
     }
   }
