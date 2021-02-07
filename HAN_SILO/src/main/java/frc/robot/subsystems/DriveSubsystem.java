@@ -42,7 +42,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   private LimeLightSubsystem m_vision;
   
-  private double desiredHeading = 0;
+  private double desiredHeading;
 
   private final ProfiledPIDController headingController
      = new ProfiledPIDController(VisionConstants.kTurnP, VisionConstants.kTurnI, VisionConstants.kTurnD,
@@ -56,6 +56,7 @@ public class DriveSubsystem extends SubsystemBase {
   //trapezoid profiler to calculate the next output rather than the PID. Since trapezoid profiler doesn't have continuous input it just ignores it.
   //private final PIDController headingControllerPID = new PIDController(DriveConstants.kTurnP, DriveConstants.kTurnI, DriveConstants.kTurnD);
 
+  private boolean headingOverride = true;
   private boolean visionHeadingOverride = false;
   private boolean visionDistanceOverride = false;
   
@@ -65,6 +66,8 @@ public class DriveSubsystem extends SubsystemBase {
   private final AnalogInput rightRearAbsEncoder;
   
   private double driveSpeedScaler = 1.0;
+
+  private Double lockedHeading = null;
 
   //Robot swerve modules
   private final SwerveModule m_leftFront = 
@@ -228,24 +231,40 @@ public class DriveSubsystem extends SubsystemBase {
     xSpeedAdjusted *= this.driveSpeedScaler;
     ySpeedAdjusted *= this.driveSpeedScaler;
 
-    //Thumbstick clamping
+    //If the right stick is neutral - this code should lock on the last known heading 
     if(Math.abs(rotationalOutput) < 0.1){
-      rotationalOutput = 0;
+      headingOverride = true;
+      if (lockedHeading == null) {
+        headingController.reset(getHeading());
+        desiredHeading = getHeading();
+        lockedHeading = desiredHeading;
+      }
+      else {
+        desiredHeading = lockedHeading;
+      }
+    }
+    else {
+        headingOverride = false;
+        lockedHeading = null;
+        rotationalOutput *= Math.PI;
     }
 
-    rotationalOutput *= Math.PI;
 
+    if (visionHeadingOverride || headingOverride) {
+
+    
     if(visionHeadingOverride){
       rotationalOutput = headingController.calculate(getHeading());
       desiredHeading = getHeading();
       SmartDashboard.putNumber("headingController Output", rotationalOutput);
     } else {
-      headingController.reset(getHeading());
+      //headingController.reset(getHeading());
       //desiredHeading += rotationalOutput*2.5;
-      //rotationalOutput = headingController.calculate(getHeading(), desiredHeading);
-      //SmartDashboard.putNumber("desiredHeading", desiredHeading);
-      //SmartDashboard.putNumber("headingController Output", rotationalOutput);
+      rotationalOutput = headingController.calculate(getHeading(), desiredHeading);
+      SmartDashboard.putNumber("desiredHeading", desiredHeading);
+      SmartDashboard.putNumber("headingController Output", rotationalOutput);
     }
+  }
 
     /*
     if(Math.abs(rotationalOutput) < 0.1){
@@ -387,6 +406,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void resetGyro() {
     if(m_gyro != null){
       desiredHeading = 0;
+      lockedHeading = null;
       m_gyro.reset();
     }
   }
