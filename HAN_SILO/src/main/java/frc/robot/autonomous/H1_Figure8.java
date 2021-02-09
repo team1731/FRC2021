@@ -12,16 +12,16 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.JevoisVisionSubsystem;
 import frc.robot.subsystems.SequencerSubsystem;
 import frc.robot.subsystems.ShootClimbSubsystem;
-
+// This is the slalom path with the robot starting by the goal and driving backwards.
 public class H1_Figure8 extends _DelayableStrafingAutoMode {
     public H1_Figure8(DriveSubsystem m_robotDrive) {
                 
         SequentialCommandGroup commandGroup = new SequentialCommandGroup(
             new WaitCommand(getInitialDelaySeconds()),
-            createSwerveCommand(m_robotDrive, "BACKWARD TO ENEMY PAIR", TrajectoryDirection.REV, 
+            createSwerveCommand(m_robotDrive, "Slalom ", TrajectoryDirection.REV, 
             TrajectoryHeading.UNROTATE, 0, new double[][]
                 {{0.0, 0.0, 0},
-                {-0.762, -0.0},    // initial pose
+                {-0.762, -0.0},    
                 {-1.524, -0.762},    
                 {-2.286, -1.524},    
                 {-5.334, -1.524},    
