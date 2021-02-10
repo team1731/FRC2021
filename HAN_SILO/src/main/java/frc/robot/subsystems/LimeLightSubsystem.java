@@ -134,9 +134,8 @@ public class LimeLightSubsystem extends SubsystemBase {
             ledQueries--;
         }
 
-        if(ledQueries <= 0){
-            //limeLED.setNumber(1);
-            limeLED.setNumber(3);
+        if(ledQueries <= 0 && trackQuery){
+            limeLED.setNumber(1);
         }
     }
 }
