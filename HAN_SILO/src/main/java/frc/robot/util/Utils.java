@@ -20,4 +20,12 @@ public class Utils {
         System.out.println("state (end)     poseMetersTheta Deg " + state.poseMeters.getRotation().getDegrees());
         System.out.println("state (end) velocityMetersPerSecond " + state.velocityMetersPerSecond);
     }
+
+    public static int Clamp(int val, int min, int max){
+      return Math.max(min, Math.min(max, val));
+    }
+
+    public static double Clamp(double val, double min, double max){
+      return Math.max(min, Math.min(max, val));
+    }
 }

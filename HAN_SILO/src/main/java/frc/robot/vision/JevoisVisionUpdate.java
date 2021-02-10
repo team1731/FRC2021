@@ -8,6 +8,7 @@ import java.util.List;
  * VisionUpdate contains the various attributes outputted by the vision system, namely a list of targets and the
  * timestamp at which it was captured.
  */
+@Deprecated
 public class JevoisVisionUpdate {
 
     protected List<TargetInfo> mtargets;

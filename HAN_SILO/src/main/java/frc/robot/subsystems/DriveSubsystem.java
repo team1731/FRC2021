@@ -27,9 +27,11 @@ import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.util.AutoSwerveDebug;
 import frc.robot.util.ReflectingCSVWriter;
-import frc.robot.util.SwerveModuleDebug;;
+import frc.robot.util.SwerveModuleDebug;
+import frc.robot.util.Utils;;
 
 @SuppressWarnings("PMD.ExcessiveImports")
 public class DriveSubsystem extends SubsystemBase {
@@ -38,17 +40,24 @@ public class DriveSubsystem extends SubsystemBase {
   private final ReflectingCSVWriter<AutoSwerveDebug> mCSVWriter1;
   private final ReflectingCSVWriter<SwerveModuleDebug> mCSVWriter2;
 
+  private LimeLightSubsystem m_vision;
+  
+  private double desiredHeading = 0;
+
   private final ProfiledPIDController headingController
-     = new ProfiledPIDController(DriveConstants.kTurnP, DriveConstants.kTurnI, DriveConstants.kTurnD,
-       new TrapezoidProfile.Constraints(DriveConstants.kMaxTurnVelocity, DriveConstants.kMaxTurnAcceleration));
+     = new ProfiledPIDController(VisionConstants.kTurnP, VisionConstants.kTurnI, VisionConstants.kTurnD,
+       new TrapezoidProfile.Constraints(VisionConstants.kMaxTurnVelocity, VisionConstants.kMaxTurnAcceleration));
+
+  private final ProfiledPIDController visionDistanceController
+     = new ProfiledPIDController(VisionConstants.kDriveP, VisionConstants.kDriveI, VisionConstants.kDriveD,
+       new TrapezoidProfile.Constraints(VisionConstants.kDriveMaxSpeed, VisionConstants.kDriveMaxAcceleration));
 
   //After looking inside the ProfiledPIDController class, I suspect that a standard PIDController will work better as ProfiledPID seems to primarily use the
   //trapezoid profiler to calculate the next output rather than the PID. Since trapezoid profiler doesn't have continuous input it just ignores it.
   //private final PIDController headingControllerPID = new PIDController(DriveConstants.kTurnP, DriveConstants.kTurnI, DriveConstants.kTurnD);
-  
-  //private double headingControllerOutput = 0;
 
-  private boolean stickControlledHeading = true;
+  private boolean visionHeadingOverride = false;
+  private boolean visionDistanceOverride = false;
   
   private final AnalogInput leftFrontAbsEncoder;
   private final AnalogInput rightFrontAbsEncoder;
@@ -86,7 +95,7 @@ public class DriveSubsystem extends SubsystemBase {
   /**
    * Creates a new DriveSubsystem.
    */
-  public DriveSubsystem() {
+  public DriveSubsystem(LimeLightSubsystem m_vision) {
 
     leftFrontAbsEncoder = new AnalogInput(0);
     rightFrontAbsEncoder = new AnalogInput(1);
@@ -98,13 +107,17 @@ public class DriveSubsystem extends SubsystemBase {
         System.err.println("\n\nAt least one absolute encoder (AnalogInput(0)--AnalogInput(3) is NULL!!!\n\n");
       }
     }
-    headingController.setTolerance(DriveConstants.kTurnToleranceDeg, DriveConstants.kTurnRateToleranceDegPerS);
-    //headingController.enableContinuousInput(-180, 180);
+    headingController.setTolerance(VisionConstants.kTurnToleranceDeg, VisionConstants.kTurnRateToleranceDegPerS);
+    visionDistanceController.setTolerance(VisionConstants.kDriveTolerance, VisionConstants.kDriveAccelerationTolerance);
+    visionDistanceController.setGoal(0);
+    headingController.enableContinuousInput(-180, 180);
 
     mCSVWriter1 = new ReflectingCSVWriter<>(AutoSwerveDebug.class);
     mCSVWriter2 = new ReflectingCSVWriter<>(SwerveModuleDebug.class);
     m_timer.reset();
     m_timer.start();
+
+    this.m_vision = m_vision;
   }
 
   public void setDriveSpeedScaler(double axis){
@@ -125,21 +138,9 @@ public class DriveSubsystem extends SubsystemBase {
     return Rotation2d.fromDegrees(m_gyro.getAngle() * (DriveConstants.kGyroReversed ? -1.0 : 1.0));
   }
 
-  /*
-  /**
-   * @return the headingControllerOutput
-  public double getHeadingControllerOutput() {
-    return headingControllerOutput;
-  }
-  */
-
   @Override
   public void periodic() {
     resumeCSVWriter();
-
-    //SmartDashboard.putNumber("headingController In", getHeading());
-    //headingControllerOutput = headingController.calculate(MathUtil.clamp(getHeading(), -180, 180));
-    //SmartDashboard.putNumber("headingController Out", headingControllerOutput);
 
     // Update the odometry in the periodic block
     double headingRadians = Math.toRadians(getHeading());
@@ -227,115 +228,51 @@ public class DriveSubsystem extends SubsystemBase {
     xSpeedAdjusted *= this.driveSpeedScaler;
     ySpeedAdjusted *= this.driveSpeedScaler;
 
+    //Thumbstick clamping
     if(Math.abs(rotationalOutput) < 0.1){
       rotationalOutput = 0;
     }
 
     rotationalOutput *= Math.PI;
 
-    /*
-    if(stickControlledHeading){
-      //If the stick is released, don't change the rotation
-      if((Math.abs(rightX) > DriveConstants.kMinRightStickThreshold || Math.abs(rightY) > DriveConstants.kMinRightStickThreshold)){
-        double stickAngle = getStickAngle(rightX, rightY);
-        double heading = getHeading();
-
-        //Continuous correction
-        //This assumes that positive is COUNTERclockwise, which may be wrong... the fix should be simply reversing the signs
-        if((stickAngle - heading) > 180){
-          stickAngle -= 360;
-        } else if((stickAngle - heading) < -180){
-          stickAngle += 360;
-        }
-        SmartDashboard.putNumber("bdlheading", heading); 
-        SmartDashboard.putNumber("bdlstick", stickAngle); 
-        rotationalOutput = headingController.calculate(heading, stickAngle);
-      } else {
-        headingController.reset(getHeading());
-      }
-    } else {
-      */
-      //Perhaps do the same continuous correction here as above? Test first.
-    if(!stickControlledHeading){
+    if(visionHeadingOverride){
       rotationalOutput = headingController.calculate(getHeading());
+      desiredHeading = getHeading();
+      SmartDashboard.putNumber("headingController Output", rotationalOutput);
     } else {
       headingController.reset(getHeading());
+      //desiredHeading += rotationalOutput*2.5;
+      //rotationalOutput = headingController.calculate(getHeading(), desiredHeading);
+      //SmartDashboard.putNumber("desiredHeading", desiredHeading);
+      //SmartDashboard.putNumber("headingController Output", rotationalOutput);
     }
-    //}
+
+    /*
+    if(Math.abs(rotationalOutput) < 0.1){
+      rotationalOutput = 0;
+    }
+    */
+
+    if(visionDistanceOverride){
+      //This allows the driver to still have forward/backward control of the robot while getting to optimal shooting in case something is in the way
+      xSpeedAdjusted = Utils.Clamp(xSpeedAdjusted + visionDistanceController.calculate(m_vision.getLastTarget().getZ()), 0, 1);
+      SmartDashboard.putNumber("distanceController Output", ySpeedAdjusted);
+    } else {
+      visionDistanceController.reset(m_vision.getLastTarget().getZ());
+    }
     
 
-    //Replaced rotAdjusted with rotationalOutput
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
           xSpeedAdjusted, ySpeedAdjusted, rotationalOutput, getAngle())
             : new ChassisSpeeds(xSpeedAdjusted, ySpeedAdjusted, rotationalOutput)
     );
     SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+    SmartDashboard.putNumber("SwerveModuleAzimuthState", swerveModuleStates[0].angle.getDegrees());
     m_leftFront.setDesiredState(swerveModuleStates[0]);    // leftFront, rightFront, leftRear, rightRear
     m_rightFront.setDesiredState(swerveModuleStates[1]);
     m_leftRear.setDesiredState(swerveModuleStates[2]);
     m_rightRear.setDesiredState(swerveModuleStates[3]);
-  }
-
-  /**
-   * Turns the robot to a heading read from the gyro
-   * @param heading The gyro angle from -180 to 180
-   */
-  public double getStickAngle(double stickX, double stickY){
-      double stickAngle = Math.toDegrees(Math.atan2(stickY, stickX));
-      stickAngle -= 90;
-      
-      //SmartDashboard.putNumber("getStickAngle Raw", stickAngle);
-
-      //Don't know of Math.atan2 does this automatically. Check smartdashboard
-      /*
-      if((stickX < 0 && stickY >= 0) || (stickX < 0 && stickY < 0)){
-        stickAngle += 180;
-      } else if(stickX > 0 && stickY < 0){
-        stickAngle += 360;
-      }
-      */
-
-      //If the angle is greater than 180, mirror and invert it to keep the -180-180 heading angle (see getHeading())
-      if(stickAngle < -180){
-            stickAngle += 360;
-      }
-      
-      stickAngle *= -1;
-
-      //SmartDashboard.putNumber("getStickAngle Clamped", stickAngle);
-
-      /*
-
-      Currently, we need to find the quickest turn from -179 to 179 in heading. So in reality, 
-      this is only a 2 degree difference
-      However, the robot is spinning all the way around...
-
-
-
-      */
-
-      return stickAngle;
-
-      //JavaScript from a cartesian to polar coordinate converter:
-      //Tbh drives me mad just a little with the lack of an OR and the fact that there's an if statement that just does nothing
-      /*
-      var x = $j('#x').val();
- 	var y = $j('#y').val();
- 	var r = Math.pow((Math.pow(x,2) + Math.pow(y,2)),0.5);
- 	var theta = Math.atan(y/x)*360/2/Math.PI;
- 	if (x >= 0 && y >= 0) {
- 		theta = theta;
- 	} else if (x < 0 && y >= 0) {
- 		theta = 180 + theta;
- 	} else if (x < 0 && y < 0) {
- 		theta = 180 + theta;
- 	} else if (x > 0 && y < 0) {
- 		theta = 360 + theta;
-   } 
-   */
-      
-      
   }
 
   /**
@@ -420,11 +357,15 @@ public class DriveSubsystem extends SubsystemBase {
    * Determines if the right thumbstick on the driver controller can control the robot's orientation.
    * Set to false if you want another subsystem to control the orientation in teleop (e.x. vision)
    */
-  public void setStickControlledHeading(boolean controlledHeading){
-    stickControlledHeading = controlledHeading;
+  public void setVisionHeadingOverride(boolean visionOverride){
+    visionHeadingOverride = visionOverride;
   }
 
-  public void setHeadingControllerGoal(double newGoal){
+  public void setVisionDistanceOverride(boolean visionOverride){
+    visionDistanceOverride = visionOverride;
+  }
+
+  public void setVisionHeadingGoal(double newGoal){
     headingController.setGoal(newGoal);
   }
 
@@ -445,6 +386,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void resetGyro() {
     if(m_gyro != null){
+      desiredHeading = 0;
       m_gyro.reset();
     }
   }

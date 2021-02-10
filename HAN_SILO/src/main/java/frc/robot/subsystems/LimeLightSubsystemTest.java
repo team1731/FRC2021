@@ -6,6 +6,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
+@Deprecated
 public class LimeLightSubsystemTest extends SubsystemBase {
 
     NetworkTable limeTable;

@@ -7,7 +7,12 @@
 
 package frc.robot;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -55,7 +60,8 @@ public class Robot extends TimedRobot {
     m_sequencer.stop();
     m_shootclimb.stopShooting();
     //m_colorwheel.init();
-    m_ledstring.init();
+    //LEDs are not attached currently
+    //m_ledstring.init();
   }
 
   /**
@@ -69,8 +75,8 @@ public class Robot extends TimedRobot {
     camServer.startAutomaticCapture();
     
     m_ledstring = new LedStringSubsystem();
-    m_robotDrive = new DriveSubsystem();
     m_vision = new LimeLightSubsystem();
+    m_robotDrive = new DriveSubsystem(m_vision);
     m_intake = new IntakeSubsystem(m_ledstring);
     m_sequencer = new SequencerSubsystem(m_ledstring);
     m_shootclimb = new ShootClimbSubsystem(m_ledstring);
@@ -95,8 +101,20 @@ public class Robot extends TimedRobot {
     
     SmartDashboard.putBoolean("Vis_HasTarget", false);
     SmartDashboard.putNumber("Vis_TargetAngle", 0);
-    SmartDashboard.putString("Vis_TargetString", "Empty");
-    SmartDashboard.putString("Vis_TargetProcessed", "Empty");
+    //Old data for JeVois
+    //SmartDashboard.putString("Vis_TargetString", "Empty");
+    //SmartDashboard.putString("Vis_TargetProcessed", "Empty");
+    
+    try {
+      File branchInfo = new File(Filesystem.getDeployDirectory()+"/branchDeployed");
+      Scanner reader = new Scanner(branchInfo);
+      String branchName = reader.nextLine();
+      SmartDashboard.putString("Branch Name", branchName);
+    } catch (FileNotFoundException fnf){
+      SmartDashboard.putString("Branch Name", "N/A");
+      System.err.println("branchDeployed not found");
+      fnf.printStackTrace();
+    }
   }
 
   /**

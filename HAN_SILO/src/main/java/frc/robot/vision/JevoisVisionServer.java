@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * @see VisionUpdate.java
  */
 
+ @Deprecated
 public class JevoisVisionServer {
     double lastMessageReceivedTime = 0;
     private boolean m_use_java_time = false;
