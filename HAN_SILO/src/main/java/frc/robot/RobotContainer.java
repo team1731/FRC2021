@@ -25,6 +25,7 @@ import frc.robot.autonomous.R2_Shoot3_FriendlyTriple;
 import frc.robot.autonomous.T3_DriveForwardIntakeDriveBackward;
 import frc.robot.autonomous.T4_ShootDriveForward;
 import frc.robot.autonomous.T5_ShootDriveBackward;
+import frc.robot.autonomous.H1_Figure8;
 import frc.robot.autonomous._NamedAutoMode;
 import frc.robot.autonomous._NotImplementedProperlyException;
 import frc.robot.commands.*;
@@ -289,6 +290,8 @@ public class RobotContainer {
       case "T3": return new _NamedAutoMode(new T3_DriveForwardIntakeDriveBackward(m_robotDrive, m_intake, m_sequencer, m_shootclimb));
       case "T4": return new _NamedAutoMode(new T4_ShootDriveForward(m_robotDrive, m_sequencer, m_shootclimb));
       case "T5": return new _NamedAutoMode(new T5_ShootDriveBackward(m_robotDrive, m_sequencer, m_shootclimb));
+
+      case "H1": return new _NamedAutoMode(new H1_Figure8(m_robotDrive));
       
       default: 
         System.err.println("FATAL: SELECTED AUTO MODE " + autoModeName + " DOES NOT MAP TO A JAVA CLASS!!!!");
