@@ -94,6 +94,27 @@ public class _DelayableStrafingAutoMode {
         return newStates;
     }
 
+    /**
+     * @param oldStates -- original list of states from the (calculated) trajectory
+     * @param rotationDegrees -- desired final pose rotation -- to assign to last state in list
+     * @return -- list of fixed-up (unrotated) states (except for the last one in the list)
+     */
+    List<Trajectory.State> convertTrajectory(List<Trajectory.State> oldStates, double rotationDegrees){
+        List<Trajectory.State> newStates = new ArrayList<Trajectory.State>();
+        for(Trajectory.State state : oldStates){
+          //simply assign a new Rotation having rotationDegrees degrees...
+          double x_meters = state.poseMeters.getX() / 39.37;
+          double y_meters = state.poseMeters.getY() / 39.37;
+          Pose2d newPose = new Pose2d(new Translation2d(x_meters, y_meters), new Rotation2d(Math.toRadians(rotationDegrees)));
+          newStates.add(new Trajectory.State(state.timeSeconds, 
+                                            state.velocityMetersPerSecond, 
+                                            state.accelerationMetersPerSecondSq, 
+                                            newPose, 
+                                            state.curvatureRadPerMeter));
+        }
+        return newStates;
+    }
+
     enum TrajectoryDirection {
         FWD,
         REV
@@ -118,6 +139,7 @@ public class _DelayableStrafingAutoMode {
     enum TrajectoryHeading {
         UNROTATE,
         MAINTAIN,
+        CONVERT_TO_METERS,
         DO_NOTHING
     }
 
@@ -141,6 +163,8 @@ public class _DelayableStrafingAutoMode {
         switch(mode){
             case UNROTATE: trajectory = new Trajectory(unrotateTrajectory(trajectory.getStates(), value)); break;
             case MAINTAIN: trajectory = new Trajectory(maintainTrajectory(trajectory.getStates(), value)); break;
+            case CONVERT_TO_METERS: 
+                trajectory = new Trajectory(maintainTrajectory(trajectory.getStates(), value)); break;
             case DO_NOTHING: // do not alter trajectory
         }
         Utils.printTrajectory(this.getClass().getSimpleName() + ": " + name, trajectory);
