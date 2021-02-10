@@ -164,7 +164,7 @@ public class _DelayableStrafingAutoMode {
             case UNROTATE: trajectory = new Trajectory(unrotateTrajectory(trajectory.getStates(), value)); break;
             case MAINTAIN: trajectory = new Trajectory(maintainTrajectory(trajectory.getStates(), value)); break;
             case CONVERT_TO_METERS: 
-                trajectory = new Trajectory(maintainTrajectory(trajectory.getStates(), value)); break;
+                trajectory = new Trajectory(convertTrajectory(trajectory.getStates(), value)); break;
             case DO_NOTHING: // do not alter trajectory
         }
         Utils.printTrajectory(this.getClass().getSimpleName() + ": " + name, trajectory);
