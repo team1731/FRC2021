@@ -161,9 +161,15 @@ public class _DelayableStrafingAutoMode {
             createTrajectoryConfig(dir));
 
         switch(mode){
-            case UNROTATE: trajectory = new Trajectory(unrotateTrajectory(trajectory.getStates(), value)); break;
-            case MAINTAIN: trajectory = new Trajectory(maintainTrajectory(trajectory.getStates(), value)); break;
+            case UNROTATE:
+                //  undoes the wpilib pose calculation of heading so we can do a proper strafe (supposes an initial heading of 0 deg)
+                trajectory = new Trajectory(unrotateTrajectory(trajectory.getStates(), value)); break;
+            case MAINTAIN: 
+                //  fixes the heading to a value throughout, so we can start the auto "at an angle"
+                //  NOTE: if the angle is 0, it should accomplish the same thing as unrotateTrajectory
+                trajectory = new Trajectory(maintainTrajectory(trajectory.getStates(), value)); break;
             case CONVERT_TO_METERS: 
+                // converts from inches to meters, then maintains trajectory
                 trajectory = new Trajectory(convertTrajectory(trajectory.getStates(), value)); break;
             case DO_NOTHING: // do not alter trajectory
         }
