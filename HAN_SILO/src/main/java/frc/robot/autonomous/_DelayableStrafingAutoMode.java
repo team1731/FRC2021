@@ -169,15 +169,32 @@ public class _DelayableStrafingAutoMode {
                 //  NOTE: if the angle is 0, it should accomplish the same thing as unrotateTrajectory
                 trajectory = new Trajectory(maintainTrajectory(trajectory.getStates(), value)); break;
             case CONVERT_TO_METERS: 
-                // converts from inches to meters, then maintains trajectory
-                trajectory = new Trajectory(convertTrajectory(trajectory.getStates(), value)); break;
+                // NOTE: conversion is done before this point, so just maintain trajectory at this point
+                trajectory = new Trajectory(maintainTrajectory(trajectory.getStates(), value)); break;
             case DO_NOTHING: // do not alter trajectory
         }
         Utils.printTrajectory(this.getClass().getSimpleName() + ": " + name, trajectory);
         return trajectory;
     }
 
+    public double[][] convertPoints(double[][] originalPoints){
+        double[][] convertedPoints = new double[originalPoints.length][];
+        for (int i=0; i<originalPoints.length; i++){
+            double[] poseToConvert = new double[originalPoints[i].length];
+            poseToConvert[0] = originalPoints[i][0]/39.37;
+            poseToConvert[1] = originalPoints[i][1]/39.37;
+            if (originalPoints[i].length == 3){
+                poseToConvert[2] = originalPoints[i][2];
+            }
+            convertedPoints[i] = poseToConvert;
+        }
+        return convertedPoints;
+    }
+
     public _InstrumentedSwerveControllerCommand createSwerveCommand(DriveSubsystem m_robotDrive, String name, TrajectoryDirection dir, TrajectoryHeading mode, double value, double[][] points){
+        if (mode == TrajectoryHeading.CONVERT_TO_METERS){
+            points = convertPoints(points);
+        }
         return new _InstrumentedSwerveControllerCommand(
             m_robotDrive.getCSVWriter(),
             createTrajectory(name, dir, mode, value, points),
