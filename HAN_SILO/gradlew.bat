@@ -14,6 +14,23 @@
 @rem limitations under the License.
 @rem
 
+::echo "Creating Git branch identifier..."
+::branchInfo=src/main/deploy/DeployedBranchInfo.txt
+::\cp ../.git/HEAD $branchInfo
+::echo "" >> $branchInfo
+::echo "Deployed on:" >> $branchInfo
+::date >> $branchInfo
+::echo Git branch identifier created in $branchInfo
+
+ECHO Creating Git branch identifier...
+SET branchInfo=src\main\deploy\DeployedBranchInfo.txt
+COPY /Y ..\.git\HEAD %branchInfo%
+ECHO >> %branchInfo%
+ECHO Built on: >> %branchInfo%
+DATE /T >> %branchInfo%
+TIME /T >> %branchInfo%
+ECHO Git branch identifier created in %branchInfo%
+
 @if "%DEBUG%" == "" @echo off
 @rem ##########################################################################
 @rem
