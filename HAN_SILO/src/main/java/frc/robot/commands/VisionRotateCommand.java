@@ -33,7 +33,7 @@ public class VisionRotateCommand extends CommandBase {
     public void execute(){
         //Update the turning PID goal if a valid target exists
         if(m_vision.hasTarget()){
-            double targetAngle = m_drive.getHeading() - m_vision.getLastTarget().getY();
+            double targetAngle = m_drive.getHeading() - m_vision.getLastPortPos().getY();
             SmartDashboard.putNumber("Vis_TargetAngle", targetAngle);
             m_drive.setVisionHeadingGoal(targetAngle);
         }
