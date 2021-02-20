@@ -11,6 +11,7 @@ public class H3_Bounce extends _DelayableStrafingAutoMode {
                 
         SequentialCommandGroup commandGroup = new SequentialCommandGroup(
             new WaitCommand(getInitialDelaySeconds()),
+
             createSwerveCommand(m_robotDrive, "Bounce: start zone to A3", TrajectoryDirection.REV, 
                 TrajectoryHeading.CONVERT_TO_METERS, 0, new double[][] { //these are INCHES
                 {0.0, 0.0, 0}, //NOTE: robot starts with its +x (longitudinal) axis aligned with field +x axis (facing the right side)
@@ -62,6 +63,25 @@ public class H3_Bounce extends _DelayableStrafingAutoMode {
             })
         );
 
+        // createSwerveCommand(m_robotDrive, "Bounce", TrajectoryDirection.REV, 
+        //     TrajectoryHeading.UNROTATE, 0, new double[][]
+        //         {{0.0, 0.0, 0},
+        //         {-0.762, -0.0},    
+        //         {-1.524, -0.762},    
+        //         {-2.286, -1.524},    
+        //         {-5.334, -1.524},    
+        //         {-5.842, -0.762}, 
+        //         {-6.858, -0.0},
+        //         {-7.62, -0.762},
+        //         {-6.858, -1.524},
+        //         {-5.842, -0.762},
+        //         {-5.334, 0.0},
+        //         {-2.286, 0.0},
+        //         {-1.524, -0.762},
+        //         {-0.762, -1.524},
+        //         {0.0, -1.524,0}}
+        // ));
+ 
         // Run path following command, then stop at the end.
         command = commandGroup.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
     }
