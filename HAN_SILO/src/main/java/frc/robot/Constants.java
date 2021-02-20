@@ -103,7 +103,7 @@ public final class Constants {
   }
 
   public static final class AutoConstants {
-    public static final String kDEFAULT_AUTO_CODE = "H1";
+    public static final String kDEFAULT_AUTO_CODE = "H3";
                                   // DEFAULT AUTO MODE if Drive Team is unable to set the mode via Dashboard
                                   // NOTE: also useful if trying to run in the simulator!
                                   // XNDD (X=L,M,R,F) (N=1,2,3,4) (DD=0-99 [optional])
@@ -118,7 +118,7 @@ public final class Constants {
                                   // M203 --> wait 0 seconds, run M2 with 3-sec delay after 1st shooting
                                   // F12 --> wait 2 seconds, run "forward" auto mode (robot will drive forward a pre-programmed distance)
 
-    public static final double kMaxSpeedMetersPerSecond = 2.6; //2.6
+    public static final double kMaxSpeedMetersPerSecond = 1.5; //2.6
     public static final double kMaxAccelerationMetersPerSecondSquared = 2; //2
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI*2;
     public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI*2;

@@ -12,10 +12,13 @@ public class H3_Bounce extends _DelayableStrafingAutoMode {
         SequentialCommandGroup commandGroup = new SequentialCommandGroup(
             new WaitCommand(getInitialDelaySeconds()),
             createSwerveCommand(m_robotDrive, "Bounce", TrajectoryDirection.REV, 
-            TrajectoryHeading.CONVERT_TO_METERS, 0, new double[][] //these are INCHES
+            TrajectoryHeading.UNROTATE, 0, new double[][] 
                 {{0.0, 0.0, 0}, //NOTE: robot starts with its +x (longitudinal) axis aligned with field +x axis (facing the right side)
-                {  0,  -10},    
-                { 10,  -20},    
+                {-1, 0}, 
+                {-1, -0.5}, 
+                { -1, -1, 0}} //finish zone
+                ));   
+   /*
                 { 20,  -30},    
                 { 30,  -35},    
                 { 40,  -40}, 
@@ -42,11 +45,12 @@ public class H3_Bounce extends _DelayableStrafingAutoMode {
                 { 30, -220},
 
                 { 30, -240}, 
-                { 10, -260}, 
-                {  0, -280, 0}} //finish zone
+                { 10, -260},
+                {  0, -280, 0}} //finish zone 
+                {  0, -1, 0}} //finish zone
             ));
 
-        
+*/
  
 
         // Run path following command, then stop at the end.
