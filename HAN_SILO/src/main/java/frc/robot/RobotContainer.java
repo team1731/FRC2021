@@ -143,8 +143,8 @@ public class RobotContainer {
     new JoystickButton(m_driverController, XboxConstants.kRBumper)
       .whenActive(new VisionRotateCommand(m_vision, m_robotDrive, m_driverController));
 
-    new JoystickButton(m_driverController, XboxConstants.kLBumper)
-      .whenActive(new VisionDistanceCommand(m_vision, m_robotDrive, m_driverController));
+    //new JoystickButton(m_driverController, XboxConstants.kLBumper)
+    //  .whenActive(new VisionDistanceCommand(m_vision, m_robotDrive, m_driverController));
 
     new JoystickButton(m_operatorController, 8) // convert -1 to +1 TO 0 to 1
       .whileActiveContinuous(() -> m_shootclimb.spinShooter((m_operatorController.getRawAxis(4)+1)/2))
@@ -155,9 +155,11 @@ public class RobotContainer {
     //);
 
     // scale drive speed according to axis 5 (but only when switch 12 is UP)
-    new JoystickButton(m_operatorController, 12)
-      .whileActiveContinuous(() -> m_robotDrive.setDriveSpeedScaler(m_operatorController.getRawAxis(5)))
-      .whenInactive(() -> m_robotDrive.setDriveSpeedScaler(1));
+    new JoystickButton(m_driverController, XboxConstants.kLBumper)
+      .whileActiveContinuous(() -> m_robotDrive.setDriveSpeedScaler(1))
+      .whenInactive(() -> m_robotDrive.setDriveSpeedScaler(m_operatorController.getRawAxis(5)));
+
+
 
     new JoystickButton(m_operatorController, 15).whileActiveContinuous(
       new IntakeSeqCommand(m_intake, m_sequencer)
