@@ -1,3 +1,10 @@
+/*
+    Limelight 2+ Specs:
+
+    RES: 320 x 240 pixels
+    FOV: 59.6 x 49.7 degrees
+*/
+
 package frc.robot.subsystems;
 
 import frc.robot.vision.LimeTargetInfo;
@@ -8,7 +15,6 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.NetworkButton;
 
 /**
  * This subsystem stores the last target coordinates and allows for easy control over the LED
@@ -19,6 +25,9 @@ public class LimeLightSubsystem extends SubsystemBase {
      * The table that contains all controls and outputs for the Limelight
      */
     private NetworkTable limeTable;
+    /**
+     * The current vision pipeline the Limelight is set to
+     */
     private NetworkTableEntry limePipeline;
     /**
      * How off the X axis (target coordinates) the target is from the crosshair in degrees
@@ -68,11 +77,17 @@ public class LimeLightSubsystem extends SubsystemBase {
      */
     private int ledQueries = 0;
 
+    /**
+     * The different configured pipelines on the Limelight
+     */
     public enum DetectionMode {
         PowerPort,
         PowerCells
     }
 
+    /**
+     * The current Limelight pipeline
+     */
     private DetectionMode currDetectionMode = DetectionMode.PowerPort;
 
     public LimeLightSubsystem() {
@@ -90,6 +105,16 @@ public class LimeLightSubsystem extends SubsystemBase {
             limeRawX[i] = limeTable.getEntry("tx"+i);
             limeRawY[i] = limeTable.getEntry("ty"+i);
             limeRawArea[i] = limeTable.getEntry("ta"+i);
+        }
+
+        //Sync currDetectionMode with the Limelight
+        switch((int) limePipeline.getDouble(2)){
+            case 1:
+                currDetectionMode = DetectionMode.PowerCells;
+                break;
+            default:
+                currDetectionMode = DetectionMode.PowerPort;
+                break;
         }
 
         //Keep the light off so we don't blind unfortunate spectators
@@ -141,16 +166,19 @@ public class LimeLightSubsystem extends SubsystemBase {
         return limeValidTargets.getDouble(0) > 0;
     }
 
+    /**
+     * Sets the Limelight pipeline
+     */
     public void SetDetectionMode(DetectionMode detectionMode){
         currDetectionMode = detectionMode;
 
         switch(detectionMode){
             case PowerPort:
                 limePipeline.setNumber(2);
-            break;
+                break;
             case PowerCells:
                 limePipeline.setNumber(1);
-            break;
+                break;
         }
     }
 
