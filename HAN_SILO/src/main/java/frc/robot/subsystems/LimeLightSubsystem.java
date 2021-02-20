@@ -107,15 +107,7 @@ public class LimeLightSubsystem extends SubsystemBase {
             limeRawArea[i] = limeTable.getEntry("ta"+i);
         }
 
-        //Sync currDetectionMode with the Limelight
-        switch((int) limePipeline.getDouble(2)){
-            case 1:
-                currDetectionMode = DetectionMode.PowerCells;
-                break;
-            default:
-                currDetectionMode = DetectionMode.PowerPort;
-                break;
-        }
+        limePipeline.setNumber(2);
 
         //Keep the light off so we don't blind unfortunate spectators
         disableLED(false);

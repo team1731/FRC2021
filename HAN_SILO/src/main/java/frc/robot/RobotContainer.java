@@ -256,6 +256,83 @@ public class RobotContainer {
     }
 
     _NamedAutoMode selectedAutoMode = null;
+
+    /*
+    Algorithm that Patrick, Christian, and David worked on
+
+
+import java.util.Random;
+
+class positionAlgorithm{
+    public static void main(String[] args) {
+        Random rand = new Random();
+        
+        double[][] positionZero = { {1.0,2.0,3.0} , {5.0,6.0,7.0} };
+        double[][] positionOne = { {19.0,47.0,34.0} , {23.0,43.0,12.0} };
+        double[][] positionTwo = { {21.0,25.0,43.0} , {37.0,23.0,23.0} };
+        double[][] positionThree = { {12.0,32.0,43.0} , {23.0,43.0,34.0} };
+       double[][] randPosition = { {rand.nextInt(50),rand.nextInt(50),rand.nextInt(50)} , {rand.nextInt(50),rand.nextInt(50),rand.nextInt(50)} };
+       //double[][] randPosition = { {19.0,47.0,34.0} , {23.0,43.0,12.0} };
+ 
+       double[] storedDifference = new double [4]; 
+        
+        for (int i = 1; i < 5 ; i++)
+        {
+            switch (i){
+                case 1: 
+                    for(int j = 0; j < 2; j++)
+                    {
+                        storedDifference[0] += difference(randPosition[0][j], positionZero[0][j], randPosition[1][j], positionZero[1][j]);
+                    }
+                break;
+
+                case 2: 
+                    for(int j = 0; j < 2; j++)
+                    {
+                        storedDifference[1] += difference(randPosition[0][j], positionOne[0][j], randPosition[1][j], positionOne[1][j]);
+                    }
+                break;
+
+                case 3: 
+                    for(int j = 0; j < 2; j++)
+                    {
+                        storedDifference[2] += difference(randPosition[0][j], positionTwo[0][j], randPosition[1][j], positionTwo[1][j]);
+                    }
+                break;
+
+                case 4: 
+                    for(int j = 0; j < 2; j++)
+                    {
+                        storedDifference[3] += difference(randPosition[0][j], positionThree[0][j], randPosition[1][j], positionThree[1][j]);
+                    }
+                break;
+            }
+        }
+
+        System.out.println(storedDifference[0]);
+        double Min = Double.min (Double.min(storedDifference[0], storedDifference[1]), Double.min(storedDifference[2], storedDifference[3]));
+        int position = 0;
+
+        if (Min == storedDifference[0]){
+            position = 1;
+        } else if (Min == storedDifference[1]){
+            position = 2;
+        } else if (Min == storedDifference[2]){
+            position = 3;
+        } else if (Min == storedDifference[3]){
+            position = 4;
+        }
+
+        System.out.println(position);
+
+    }
+
+    private static double difference (double xOne, double xTwo, double yOne, double yTwo){
+        double differencePosition = Math.sqrt(Math.pow((xTwo - xOne), 2.0) + Math.pow((yTwo - yOne), 2.0) );
+        return differencePosition;
+    } 
+}
+    */
     try{
       selectedAutoMode = createNamedAutoMode(autoMode);
     }
