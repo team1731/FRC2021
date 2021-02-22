@@ -29,6 +29,7 @@ import frc.robot.subsystems.LedStringSubsystem;
 import frc.robot.subsystems.LimeLightSubsystem;
 import frc.robot.subsystems.SequencerSubsystem;
 import frc.robot.subsystems.ShootClimbSubsystem;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -163,7 +164,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     CommandScheduler.getInstance().cancelAll(); ///????????????????????????????????????????? SHOULD WE DO THIS????? ******************
-    
+    m_robotDrive.resetOdometry(new Pose2d());
     m_ledstring.option(LedOption.RAINBOW);
 
     m_robotDrive.resumeCSVWriter();
