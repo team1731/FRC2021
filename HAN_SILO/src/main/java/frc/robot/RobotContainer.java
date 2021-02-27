@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.autonomous.F1_Move_Forward;
+import frc.robot.autonomous.H0_GalacticSearch;
 import frc.robot.autonomous.H1_BarrelRacing;
 import frc.robot.autonomous.H2_Slalom;
 import frc.robot.autonomous.H3_Bounce;
@@ -295,6 +296,7 @@ public class RobotContainer {
       case "T4": return new _NamedAutoMode(new T4_ShootDriveForward(m_robotDrive, m_sequencer, m_shootclimb));
       case "T5": return new _NamedAutoMode(new T5_ShootDriveBackward(m_robotDrive, m_sequencer, m_shootclimb));
 
+      case "H0": return new _NamedAutoMode(new H0_GalacticSearch(m_robotDrive, m_intake, m_sequencer, m_vision));
       case "H1": return new _NamedAutoMode(new H1_BarrelRacing(m_robotDrive));      
       case "H2": return new _NamedAutoMode(new H2_Slalom(m_robotDrive));
       case "H3": return new _NamedAutoMode(new H3_Bounce(m_robotDrive));
