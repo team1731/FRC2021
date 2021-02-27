@@ -22,8 +22,8 @@ public class B1_BarrelRacing extends _DelayableStrafingAutoMode {
 
             // ENEMY PAIR
             createSwerveCommand(m_robotDrive, "BARREL RACING", TrajectoryDirection.REV, 
-                                TrajectoryHeading.UNROTATE, -31, new double[][]
-                {{0.0, 0.0, 0},
+                                TrajectoryHeading.CONVERT_TO_METERS, 0, new double[][]
+                {{0.0, 0.0, -90},
                 {-41.8,  -9.6},    // 1
                 {-35.4,  -3.2},    // 2
                 {-38.6,   9.6},    // 3
