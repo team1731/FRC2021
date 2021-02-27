@@ -13,9 +13,8 @@ import frc.robot.subsystems.JevoisVisionSubsystem;
 import frc.robot.subsystems.SequencerSubsystem;
 import frc.robot.subsystems.ShootClimbSubsystem;
 
-public class B1_BarrelRacing extends _DelayableStrafingAutoMode {
-    public B1_BarrelRacing(DriveSubsystem m_robotDrive, IntakeSubsystem m_intake, SequencerSubsystem m_sequence,
-            ShootClimbSubsystem m_shootclimb) {
+public class H1_BarrelRacing extends _DelayableStrafingAutoMode {
+    public H1_BarrelRacing(DriveSubsystem m_robotDrive) {
                 
         SequentialCommandGroup commandGroup = new SequentialCommandGroup(
             new WaitCommand(getInitialDelaySeconds()),
@@ -55,6 +54,6 @@ public class B1_BarrelRacing extends _DelayableStrafingAutoMode {
         );
 
         // Run path following command, then stop at the end.
-        command = commandGroup.andThen(() -> m_robotDrive.drive(0, 0, 0, false)).andThen(() -> m_shootclimb.stopShooting());
+        command = commandGroup.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
     }
 }
