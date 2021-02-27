@@ -1,5 +1,6 @@
 package frc.robot.autonomous;
 
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -8,10 +9,25 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.SequencerSubsystem;
 import frc.robot.subsystems.ShootClimbSubsystem;
 
-public class T5_ShootDriveBackward extends _DelayableStrafingAutoMode {
-    public T5_ShootDriveBackward(DriveSubsystem m_robotDrive,
+public class BlueB extends _GalacticAutoMode {
+
+    @Override
+    public Translation2d[] getBallPositions(){
+        return new Translation2d[] {
+            new Translation2d(12, 34),
+            new Translation2d(98, 13),
+            new Translation2d(38, 65),
+        };
+    }
+
+    public BlueB(DriveSubsystem m_robotDrive,
             SequencerSubsystem m_sequence, ShootClimbSubsystem m_shootclimb) {
 
+                //Do an auto path for this set of cells
+
+                
+                //This is all left over from T5_ShootDriveBackwards
+            /*
         SequentialCommandGroup commandGroup = new SequentialCommandGroup(
             new WaitCommand(getInitialDelaySeconds()),
 
@@ -33,5 +49,6 @@ public class T5_ShootDriveBackward extends _DelayableStrafingAutoMode {
         );
 
         command = commandGroup.andThen(() -> m_robotDrive.drive(0, 0, 0, false)).andThen(() -> m_shootclimb.stopShooting());
+        */
     }
 }

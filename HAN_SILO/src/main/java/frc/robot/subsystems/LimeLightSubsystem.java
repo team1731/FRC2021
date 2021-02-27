@@ -150,6 +150,16 @@ public class LimeLightSubsystem extends SubsystemBase {
         return lastTarget[0];
     }
 
+    public LimeTargetInfo[] getBallPositions(){
+        //return lastTarget;
+        //Test positions for BlueB
+        return new LimeTargetInfo[] {
+            new LimeTargetInfo(12, 34),
+            new LimeTargetInfo(98, 13),
+            new LimeTargetInfo(38, 65)
+        };
+    }
+
     /**
      * Checks if the Limelight has any valid targets
      * @return Whether or not the Limelight has any valid targets

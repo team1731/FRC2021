@@ -23,6 +23,11 @@ public class LimeTargetInfo {
         this.boxWidth = hor;
     }
 
+    public LimeTargetInfo(double y, double z){
+        this.y = y;
+        this.z = z;
+    }
+
     /**
      * Returns the X of the target in robot coordinates (Z in target coordinates).
      * This is locked at 1.

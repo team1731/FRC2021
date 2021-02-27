@@ -12,19 +12,27 @@ import java.util.Map;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.geometry.Transform2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.XboxController;
 //import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.autonomous.BlueA;
+import frc.robot.autonomous.BlueB;
 import frc.robot.autonomous.F1_Move_Forward;
 import frc.robot.autonomous.L1_EnemyPair_Front3;
 import frc.robot.autonomous.M1_Shoot3_Front3_Shoot3;
 import frc.robot.autonomous.M3_Shoot3_Buddy5;
 import frc.robot.autonomous.R1_WholeSide10;
 import frc.robot.autonomous.R2_Shoot3_FriendlyTriple;
+import frc.robot.autonomous.RedA;
+import frc.robot.autonomous.RedB;
 import frc.robot.autonomous.T3_DriveForwardIntakeDriveBackward;
 import frc.robot.autonomous.T4_ShootDriveForward;
 import frc.robot.autonomous.T5_ShootDriveBackward;
+import frc.robot.autonomous._GalacticAutoMode;
 import frc.robot.autonomous.H1_Figure8;
 import frc.robot.autonomous._NamedAutoMode;
 import frc.robot.autonomous._NotImplementedProperlyException;
@@ -36,7 +44,7 @@ import frc.robot.subsystems.LedStringSubsystem;
 import frc.robot.subsystems.LimeLightSubsystem;
 import frc.robot.subsystems.SequencerSubsystem;
 import frc.robot.subsystems.ShootClimbSubsystem;
-
+import frc.robot.vision.LimeTargetInfo;
 //import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 //import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -143,7 +151,9 @@ public class RobotContainer {
       .whenActive(new VisionRotateCommand(m_vision, m_robotDrive, m_driverController));
 
     new JoystickButton(m_driverController, XboxConstants.kLBumper)
-      .whenActive(new VisionDistanceCommand(m_vision, m_robotDrive, m_driverController));
+      .whenPressed(new InstantCommand(() -> { 
+        SmartDashboard.putString("GalacticAuto", getGalacticAutoCommand().toString());
+      }));
 
     new JoystickButton(m_operatorController, 8) // convert -1 to +1 TO 0 to 1
       .whileActiveContinuous(() -> m_shootclimb.spinShooter((m_operatorController.getRawAxis(4)+1)/2))
@@ -231,33 +241,46 @@ public class RobotContainer {
     */
   }
 
-  public _NamedAutoMode getNamedAutonomousCommand(String autoSelected) {
-    String autoMode = "";
-    int initialDelaySeconds = 0;
-    int secondaryDelaySeconds = 0;
-    if(autoSelected.length() > 1){
-      autoMode = autoSelected.substring(0, 2);
-    }
-    if(autoSelected.length() > 2){
-      try{
-        initialDelaySeconds = Integer.parseInt(autoSelected.substring(2, 2));
-      }
-      catch(Exception e){
-        System.out.println("INITIAL DELAY did not parse -- defaulting to 0 seconds!!!");
-      }
-    }
-    if(autoSelected.length() > 3){
-      try{
-        secondaryDelaySeconds = Integer.parseInt(autoSelected.substring(3, 3));
-      }
-      catch(Exception e){
-        System.out.println("SECONDARY DELAY did not parse -- defaulting to 0 seconds!!!");
+  private double getDistance(Translation2d pos1, Translation2d pos2){
+    return Math.sqrt(
+      Math.pow(pos2.getX() - pos1.getX(), 2) + Math.pow(pos2.getY() - pos1.getY(), 2)
+    );
+  }
+
+  private double getDistance(Translation2d pos1, LimeTargetInfo targetPos){
+    Translation2d pos2 = new Translation2d(targetPos.getY(), targetPos.getZ());
+    return getDistance(pos1, pos2);
+  }
+
+  public _GalacticAutoMode getGalacticAutoCommand(){
+
+    LimeTargetInfo[] ballPositions = m_vision.getBallPositions();
+    _GalacticAutoMode[] modes = new _GalacticAutoMode[] {
+      new RedA(m_robotDrive, null, m_shootclimb),
+      new RedB(m_robotDrive, null, m_shootclimb),
+      new BlueA(m_robotDrive, null, m_shootclimb),
+      new BlueB(m_robotDrive, null, m_shootclimb),
+    };
+
+    double[] storedDifference = new double[modes.length];
+
+    for(int m = 0; m < modes.length; m++){
+      Translation2d[] positions = modes[m].getBallPositions();
+      for(int p = 0; p < positions.length; p++) {
+        storedDifference[m] += getDistance(positions[p], ballPositions[p]);
       }
     }
 
-    _NamedAutoMode selectedAutoMode = null;
+    int minIndex = 0;
+    for(int i = 0; i < storedDifference.length; i++){
+      if(storedDifference[i] < storedDifference[minIndex]){
+        minIndex = i;
+      }
+    }
 
-    /*
+    return modes[minIndex];
+
+/*
     Algorithm that Patrick, Christian, and David worked on
 
 
@@ -333,6 +356,35 @@ class positionAlgorithm{
     } 
 }
     */
+  }
+
+  public _NamedAutoMode getNamedAutonomousCommand(String autoSelected) {
+    String autoMode = "";
+    int initialDelaySeconds = 0;
+    int secondaryDelaySeconds = 0;
+    if(autoSelected.length() > 1){
+      autoMode = autoSelected.substring(0, 2);
+    }
+    if(autoSelected.length() > 2){
+      try{
+        initialDelaySeconds = Integer.parseInt(autoSelected.substring(2, 2));
+      }
+      catch(Exception e){
+        System.out.println("INITIAL DELAY did not parse -- defaulting to 0 seconds!!!");
+      }
+    }
+    if(autoSelected.length() > 3){
+      try{
+        secondaryDelaySeconds = Integer.parseInt(autoSelected.substring(3, 3));
+      }
+      catch(Exception e){
+        System.out.println("SECONDARY DELAY did not parse -- defaulting to 0 seconds!!!");
+      }
+    }
+
+    _NamedAutoMode selectedAutoMode = null;
+
+    
     try{
       selectedAutoMode = createNamedAutoMode(autoMode);
     }
