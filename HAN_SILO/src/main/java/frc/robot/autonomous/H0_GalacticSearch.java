@@ -36,12 +36,12 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
                     createSwerveCommand(m_robotDrive, "Red B", TrajectoryDirection.REV, 
                         TrajectoryHeading.CONVERT_TO_METERS, 0, new double[][] { //these are INCHES
                         {0.0, 0.0, 0}, //NOTE: robot starts with its +x (longitudinal) axis aligned with field -x axis (facing the start zone)
-                        { -45, 0}, //Ball C3
-                        { -93, 30},   
-                        { -105, 30},//D5    
-                        { -123, -60},    
-                        { -135, -60}, // A6   
-                        { -300,  -60, 0} //Endzone
+                        { -45, 0}, //Ball B3
+                        { -93, 60},   
+                        { -105, 60},//D5    
+                        { -153, 0},    
+                        { -165, 0}, // B7   
+                        { -300, 0, 0} //Endzone
                     })
                 );
                 break;
@@ -51,11 +51,11 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
                     createSwerveCommand(m_robotDrive, "Blue A", TrajectoryDirection.REV, 
                         TrajectoryHeading.CONVERT_TO_METERS, 0, new double[][] { //these are INCHES
                         {0.0, 0.0, 0}, //NOTE: robot starts with its +x (longitudinal) axis aligned with field -x axis (facing the start zone)
-                        { -45, 0}, //Ball C3
-                        { -93, 30},   
-                        { -105, 30},//D5    
-                        { -123, -60},    
-                        { -135, -60}, // A6   
+                        { -135, 0}, //Ball E6
+                        { -153, -90},   
+                        { -165, -90},//B7    
+                        { -203, -60},    
+                        { -215, -60}, // C9   
                         { -300,  -60, 0} //Endzone
                     })
                 );
@@ -66,12 +66,12 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
                     createSwerveCommand(m_robotDrive, "Blue B", TrajectoryDirection.REV, 
                         TrajectoryHeading.CONVERT_TO_METERS, 0, new double[][] { //these are INCHES
                         {0.0, 0.0, 0}, //NOTE: robot starts with its +x (longitudinal) axis aligned with field -x axis (facing the start zone)
-                        { -45, 0}, //Ball C3
-                        { -93, 30},   
-                        { -105, 30},//D5    
-                        { -123, -60},    
-                        { -135, -60}, // A6   
-                        { -300,  -60, 0} //Endzone
+                        { -135, 0}, //Ball D6
+                        { -183, -60},   
+                        { -195, -60},//B8    
+                        { -243, 0},    
+                        { -255, 0}, //D10   
+                        { -300, 0, 0} //Endzone
                     })
                 );
                 break;
