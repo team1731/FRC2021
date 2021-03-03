@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
@@ -50,6 +51,7 @@ public class _InstrumentedSwerveControllerCommand extends CommandBase {
   private ProfiledPIDController m_thetaController;
   private Consumer<SwerveModuleState[]> m_outputModuleStates;
   private ReflectingCSVWriter csvWriter;
+  private Double endingHeading;
   /**
    * Constructs a new SwerveControllerCommand that when executed will follow the provided
    * trajectory. This command will not return output voltages but rather raw module states from the
@@ -105,6 +107,38 @@ public class _InstrumentedSwerveControllerCommand extends CommandBase {
     addRequirements(requirements);
   }
 
+  @SuppressWarnings("ParameterName")
+  public _InstrumentedSwerveControllerCommand(
+                               ReflectingCSVWriter<AutoSwerveDebug> csvWriter,
+                               Trajectory trajectory,
+                               double endingHeading, //this is used to "fix up" a supplied trajectory
+                               Supplier<Pose2d> pose,
+                               SwerveDriveKinematics kinematics,
+                               PIDController xController,
+                               PIDController yController,
+                               ProfiledPIDController thetaController,
+
+                               Consumer<SwerveModuleState[]> outputModuleStates,
+                               Subsystem... requirements) {
+    this.csvWriter = csvWriter;
+    this.endingHeading = endingHeading;
+    m_trajectory = requireNonNullParam(trajectory, "trajectory", "SwerveControllerCommand");
+    m_pose = requireNonNullParam(pose, "pose", "SwerveControllerCommand");
+    m_kinematics = requireNonNullParam(kinematics, "kinematics", "SwerveControllerCommand");
+
+    m_xController = requireNonNullParam(xController,
+      "xController", "SwerveControllerCommand");
+    m_yController = requireNonNullParam(yController,
+      "xController", "SwerveControllerCommand");
+    m_thetaController = requireNonNullParam(thetaController,
+      "thetaController", "SwerveControllerCommand");
+
+    m_outputModuleStates = requireNonNullParam(outputModuleStates,
+      "leftFrontOutput", "SwerveControllerCommand");
+    addRequirements(requirements);
+  }
+
+
   @Override
   public void initialize() {
     // Sample final pose to get robot rotation
@@ -153,7 +187,7 @@ public class _InstrumentedSwerveControllerCommand extends CommandBase {
     // not following the poses at individual states.
     double targetAngularVel = m_thetaController.calculate(
         m_pose.get().getRotation().getRadians(),
-        m_finalPose.getRotation().getRadians());
+        endingHeading == null ? m_finalPose.getRotation().getRadians() : Rotation2d.fromDegrees(endingHeading).getRadians());
 
     double vRef = desiredState.velocityMetersPerSecond;
 

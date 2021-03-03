@@ -1,5 +1,13 @@
 package frc.robot.autonomous;
 
+import java.io.IOException;
+import java.nio.file.Path;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
@@ -8,72 +16,88 @@ import frc.robot.subsystems.DriveSubsystem;
 // This is the bounce path with the robot starting at the start one and driving forwards.
 public class H3_Bounce extends _DelayableStrafingAutoMode {
     public H3_Bounce(DriveSubsystem m_robotDrive) {
-                
-        SequentialCommandGroup commandGroup = new SequentialCommandGroup(
-            new WaitCommand(getInitialDelaySeconds()),
+        String trajectoryJSON1 = "paths/Bounce1.wpilib.json";
+        String trajectoryJSON2 = "paths/Bounce2.wpilib.json";
+        String trajectoryJSON3 = "paths/Bounce3.wpilib.json";
+        String trajectoryJSON4 = "paths/Bounce4.wpilib.json";
 
-             createSwerveCommand(m_robotDrive, "Bounce: start zone to A3", TrajectoryDirection.REV, 
-                 TrajectoryHeading.CONVERT_TO_METERS, 0, new double[][] { //these are INCHES
-                 {0.0, 0.0, -90}, //NOTE: robot starts with its +x (longitudinal) axis aligned with field +x axis (facing the right side)
-                 {  0,  -10},    
-                 { 10,  -20},    
-                 { 20,  -30},    
-                 { 30,  -35},    
-                 { 40,  -40}, 
-                 { 50,  -45},
-                 { 60,  -50, 0} //A3 pylon
-             }),
+        Trajectory trajectory1 = new Trajectory();
+        Trajectory trajectory2 = new Trajectory();
+        Trajectory trajectory3 = new Trajectory();
+        Trajectory trajectory4 = new Trajectory();
+        try {
+            Path traj1Path = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON1);
+            trajectory1 = TrajectoryUtil.fromPathweaverJson(traj1Path);
+            Path traj2Path = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON2);
+            trajectory2 = TrajectoryUtil.fromPathweaverJson(traj2Path);
+            Path traj3Path = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON3);
+            trajectory3 = TrajectoryUtil.fromPathweaverJson(traj3Path);
+            Path traj4Path = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON4);
+            trajectory4 = TrajectoryUtil.fromPathweaverJson(traj4Path);
+        } catch (IOException ex) {
+            DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON1, ex.getStackTrace());
+        }
+        m_robotDrive.resetOdometry(trajectory1.getInitialPose()); //because PathWeaver path uses absolute field coords
+        SequentialCommandGroup commandGroup = new SequentialCommandGroup(new WaitCommand(getInitialDelaySeconds()),
 
-             createSwerveCommand(m_robotDrive, "Bounce: A3 to A6", TrajectoryDirection.REV, 
-                 TrajectoryHeading.CONVERT_TO_METERS, 0, new double[][] { //these are INCHES
-                 {60,  -50, 0}, //A3 pylon
+                createSwerveCommand(m_robotDrive, "Bounce: start zone to A3", 0, trajectory1),
+                createSwerveCommand(m_robotDrive, "Bounce: A3 to A6", 0, trajectory2),
+                createSwerveCommand(m_robotDrive, "Bounce: A6 to A9", 0, trajectory3),
+                createSwerveCommand(m_robotDrive, "Bounce: A9 to finish zone", 0, trajectory4));
 
-                 {-30,  -80},
-                 {-60, -110}, //low point
-                 {-30, -140},
+                // createSwerveCommand(m_robotDrive, "Bounce: start zone to A3",
+                // TrajectoryDirection.REV,
+                // TrajectoryHeading.CONVERT_TO_METERS, 0, new double[][] { //these are INCHES
+                // {0.0, 0.0, -90}, //NOTE: robot starts with its +x (longitudinal) axis aligned
+                // with field +x axis (facing the right side)
+                // { 0, -10},
+                // { 10, -20},
+                // { 20, -30},
+                // { 30, -35},
+                // { 40, -40},
+                // { 50, -45},
+                // { 60, -50, 0} //A3 pylon
+                // })
 
-                 { 30, -140},
-                 { 60, -140, 0} //A6 pylon
-             }),
-        
-             createSwerveCommand(m_robotDrive, "Bounce: A6 to A9", TrajectoryDirection.REV, 
-                 TrajectoryHeading.CONVERT_TO_METERS, 0, new double[][] { //these are INCHES
-                 { 60, -140, 0}, //A6 pylon
-                 { 30, -150},
 
+                // createSwerveCommand(m_robotDrive, "Bounce: A3 to A6", TrajectoryDirection.REV,
+                //         TrajectoryHeading.CONVERT_TO_METERS, 0, new double[][] { // these are INCHES
+                //                 { 60, -50, 0 }, // A3 pylon
 
-                 {-30, -160},
-                 {-55, -170}, //low points
-                 {-55, -185},
-                 {-55, -200}, //low points
-                 {-30, -210},
+                //                 { -30, -80 }, { -60, -110 }, // low point
+                //                 { -30, -140 },
 
-                 { 30, -220},
-                 { 60, -230, 0} //A9 pylon
-             }),
-        
-             createSwerveCommand(m_robotDrive, "Bounce: A9 to finish zone", TrajectoryDirection.REV, 
-                 TrajectoryHeading.CONVERT_TO_METERS, 0, new double[][] { //these are INCHES
-                 { 60, -230, 0}, //A9 pylon
-                 { 30, -220},
+                //                 { 30, -140 }, { 60, -140, 0 } // A6 pylon
+                //         }),
 
-                 { 30, -240}, 
-                 { 10, -260}, 
-                 {  0, -280, 0}  //finish zone
-             })
-         );
-/*
-        createSwerveCommand(m_robotDrive, "Bounce", TrajectoryDirection.FWD, 
-            TrajectoryHeading.UNROTATE, 0, new double[][]
-                {{0.0, 0.0, -90},
-                {0.0, -0.5},  
-                {0.0, -0.75},   
-               {0.0, -1.0, -90}}
-        ));
- */
+                // createSwerveCommand(m_robotDrive, "Bounce: A6 to A9", TrajectoryDirection.REV,
+                //         TrajectoryHeading.CONVERT_TO_METERS, 0, new double[][] { // these are INCHES
+                //                 { 60, -140, 0 }, // A6 pylon
+                //                 { 30, -150 },
+
+                //                 { -30, -160 }, { -55, -170 }, // low points
+                //                 { -55, -185 }, { -55, -200 }, // low points
+                //                 { -30, -210 },
+
+                //                 { 30, -220 }, { 60, -230, 0 } // A9 pylon
+                //         }),
+
+                // createSwerveCommand(m_robotDrive, "Bounce: A9 to finish zone", TrajectoryDirection.REV,
+                //         TrajectoryHeading.CONVERT_TO_METERS, 0, new double[][] { // these are INCHES
+                //                 { 60, -230, 0 }, // A9 pylon
+                //                 { 30, -220 },
+
+                //                 { 30, -240 }, { 10, -260 }, { 0, -280, 0 } // finish zone
+                //         }));
+        /*
+         * createSwerveCommand(m_robotDrive, "Bounce", TrajectoryDirection.FWD,
+         * TrajectoryHeading.UNROTATE, 0, new double[][] {{0.0, 0.0, -90}, {0.0, -0.5},
+         * {0.0, -0.75}, {0.0, -1.0, -90}} ));
+         */
         // Run path following command, then stop at the end.
         command = commandGroup.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
     }
+
 }  
 
 /*
