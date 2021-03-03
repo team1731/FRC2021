@@ -122,7 +122,10 @@ public class _InstrumentedSwerveControllerCommand extends CommandBase {
 
     var desiredState = m_trajectory.sample(curTime);
     var desiredPose = desiredState.poseMeters;
+
   
+    
+    
 
     Pose2d poseError = desiredPose.relativeTo(m_pose.get());
 
@@ -133,6 +136,10 @@ public class _InstrumentedSwerveControllerCommand extends CommandBase {
                                    m_pose.get().getTranslation().getX(),
                                    m_pose.get().getTranslation().getY(),
                                    m_pose.get().getRotation().getDegrees()));
+
+ //  var feedForwardX = desiredState.poseMeters.getRotation().getSin()*desiredState.velocityMetersPerSecond;                              
+
+ //  var feedForwardY = desiredState.poseMeters.getRotation().getCos()*desiredState.velocityMetersPerSecond;
 
     double targetXVel = m_xController.calculate(
         m_pose.get().getTranslation().getX(),
@@ -150,8 +157,13 @@ public class _InstrumentedSwerveControllerCommand extends CommandBase {
 
     double vRef = desiredState.velocityMetersPerSecond;
 
-    targetXVel += vRef * poseError.getRotation().getCos();
-    targetYVel += vRef * poseError.getRotation().getSin();
+    //targetXVel += vRef * poseError.getRotation().getCos();
+   // targetYVel += vRef * poseError.getRotation().getSin();
+
+    targetXVel += vRef * desiredState.poseMeters.getRotation().getCos();
+    targetYVel += vRef * desiredState.poseMeters.getRotation().getSin();
+
+    
 
     var targetChassisSpeeds = new ChassisSpeeds(targetXVel, targetYVel, targetAngularVel);
 

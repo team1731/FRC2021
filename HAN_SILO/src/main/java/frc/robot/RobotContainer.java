@@ -22,6 +22,10 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.autonomous.BlueA;
 import frc.robot.autonomous.BlueB;
 import frc.robot.autonomous.F1_Move_Forward;
+import frc.robot.autonomous.H0_GalacticSearch;
+import frc.robot.autonomous.H1_BarrelRacing;
+import frc.robot.autonomous.H2_Slalom;
+import frc.robot.autonomous.H3_Bounce;
 import frc.robot.autonomous.L1_EnemyPair_Front3;
 import frc.robot.autonomous.M1_Shoot3_Front3_Shoot3;
 import frc.robot.autonomous.M3_Shoot3_Buddy5;
@@ -32,7 +36,6 @@ import frc.robot.autonomous.RedB;
 import frc.robot.autonomous.T3_DriveForwardIntakeDriveBackward;
 import frc.robot.autonomous.T4_ShootDriveForward;
 import frc.robot.autonomous.T5_ShootDriveBackward;
-import frc.robot.autonomous.H1_Figure8;
 import frc.robot.autonomous._NamedAutoMode;
 import frc.robot.autonomous._NotImplementedProperlyException;
 import frc.robot.commands.*;
@@ -158,9 +161,11 @@ public class RobotContainer {
     //);
 
     // scale drive speed according to axis 5 (but only when switch 12 is UP)
-    new JoystickButton(m_operatorController, 12)
-      .whileActiveContinuous(() -> m_robotDrive.setDriveSpeedScaler(m_operatorController.getRawAxis(5)))
-      .whenInactive(() -> m_robotDrive.setDriveSpeedScaler(1));
+    new JoystickButton(m_driverController, XboxConstants.kLBumper)
+      .whileActiveContinuous(() -> m_robotDrive.setDriveSpeedScaler(1))
+      .whenInactive(() -> m_robotDrive.setDriveSpeedScaler(m_operatorController.getRawAxis(5)));
+
+
 
     new JoystickButton(m_operatorController, 15).whileActiveContinuous(
       new IntakeSeqCommand(m_intake, m_sequencer)
@@ -297,7 +302,10 @@ public class RobotContainer {
       case "T4": return new _NamedAutoMode(new T4_ShootDriveForward(m_robotDrive, m_sequencer, m_shootclimb));
       case "T5": return new _NamedAutoMode(new T5_ShootDriveBackward(m_robotDrive, m_sequencer, m_shootclimb));
 
-      case "H1": return new _NamedAutoMode(new H1_Figure8(m_robotDrive));
+      case "H0": return new _NamedAutoMode(new H0_GalacticSearch(m_robotDrive, m_intake, m_sequencer, m_vision));
+      case "H1": return new _NamedAutoMode(new H1_BarrelRacing(m_robotDrive));      
+      case "H2": return new _NamedAutoMode(new H2_Slalom(m_robotDrive));
+      case "H3": return new _NamedAutoMode(new H3_Bounce(m_robotDrive));
       
       default: 
         System.err.println("FATAL: SELECTED AUTO MODE " + autoModeName + " DOES NOT MAP TO A JAVA CLASS!!!!");

@@ -94,6 +94,27 @@ public class _DelayableStrafingAutoMode {
         return newStates;
     }
 
+    /**
+     * @param oldStates -- original list of states from the (calculated) trajectory
+     * @param rotationDegrees -- desired final pose rotation -- to assign to last state in list
+     * @return -- list of fixed-up (unrotated) states (except for the last one in the list)
+     */
+    List<Trajectory.State> convertTrajectory(List<Trajectory.State> oldStates, double rotationDegrees){
+        List<Trajectory.State> newStates = new ArrayList<Trajectory.State>();
+        for(Trajectory.State state : oldStates){
+          //simply assign a new Rotation having rotationDegrees degrees...
+          double x_meters = state.poseMeters.getX() / 39.37;
+          double y_meters = state.poseMeters.getY() / 39.37;
+          Pose2d newPose = new Pose2d(new Translation2d(x_meters, y_meters), new Rotation2d(Math.toRadians(rotationDegrees)));
+          newStates.add(new Trajectory.State(state.timeSeconds, 
+                                            state.velocityMetersPerSecond, 
+                                            state.accelerationMetersPerSecondSq, 
+                                            newPose, 
+                                            state.curvatureRadPerMeter));
+        }
+        return newStates;
+    }
+
     enum TrajectoryDirection {
         FWD,
         REV
@@ -118,6 +139,7 @@ public class _DelayableStrafingAutoMode {
     enum TrajectoryHeading {
         UNROTATE,
         MAINTAIN,
+        CONVERT_TO_METERS,
         DO_NOTHING
     }
 
@@ -139,15 +161,40 @@ public class _DelayableStrafingAutoMode {
             createTrajectoryConfig(dir));
 
         switch(mode){
-            case UNROTATE: trajectory = new Trajectory(unrotateTrajectory(trajectory.getStates(), value)); break;
-            case MAINTAIN: trajectory = new Trajectory(maintainTrajectory(trajectory.getStates(), value)); break;
+            case UNROTATE:
+                //  undoes the wpilib pose calculation of heading so we can do a proper strafe (supposes an initial heading of 0 deg)
+                trajectory = new Trajectory(unrotateTrajectory(trajectory.getStates(), value)); break;
+            case MAINTAIN: 
+                //  fixes the heading to a value throughout, so we can start the auto "at an angle"
+                //  NOTE: if the angle is 0, it should accomplish the same thing as unrotateTrajectory
+                trajectory = new Trajectory(maintainTrajectory(trajectory.getStates(), value)); break;
+            case CONVERT_TO_METERS: 
+                // NOTE: conversion is done before this point, so just maintain trajectory at this point
+              //  trajectory = new Trajectory(maintainTrajectory(trajectory.getStates(), value)); break;
             case DO_NOTHING: // do not alter trajectory
         }
         Utils.printTrajectory(this.getClass().getSimpleName() + ": " + name, trajectory);
         return trajectory;
     }
 
+    public double[][] convertPoints(double[][] originalPoints){
+        double[][] convertedPoints = new double[originalPoints.length][];
+        for (int i=0; i<originalPoints.length; i++){
+            double[] poseToConvert = new double[originalPoints[i].length];
+            poseToConvert[0] = originalPoints[i][0]/39.37;
+            poseToConvert[1] = originalPoints[i][1]/39.37;
+            if (originalPoints[i].length == 3){
+                poseToConvert[2] = originalPoints[i][2];
+            }
+            convertedPoints[i] = poseToConvert;
+        }
+        return convertedPoints;
+    }
+
     public _InstrumentedSwerveControllerCommand createSwerveCommand(DriveSubsystem m_robotDrive, String name, TrajectoryDirection dir, TrajectoryHeading mode, double value, double[][] points){
+        if (mode == TrajectoryHeading.CONVERT_TO_METERS){
+            points = convertPoints(points);
+        }
         return new _InstrumentedSwerveControllerCommand(
             m_robotDrive.getCSVWriter(),
             createTrajectory(name, dir, mode, value, points),
