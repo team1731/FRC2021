@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import frc.robot.Constants.AutoConstants;
 import frc.robot.autonomous.BlueA;
 import frc.robot.autonomous.BlueB;
 import frc.robot.autonomous.RedA;
@@ -115,7 +116,7 @@ public class LimeLightSubsystem extends SubsystemBase {
             limeRawArea[i] = limeTable.getEntry("ta"+i);
         }
 
-        limePipeline.setNumber(2);
+        //limePipeline.setNumber(2);
 
         //Keep the light off so we don't blind unfortunate spectators
         disableLED(false);
@@ -147,6 +148,12 @@ public class LimeLightSubsystem extends SubsystemBase {
      * Updates the Vis_HasTarget and Vis_TargetPos SmartDashboard entries
      */
     private void UpdateSmartDashboard(){
+        String autoCode = SmartDashboard.getString("AUTO CODE", AutoConstants.kDEFAULT_AUTO_CODE).toUpperCase().strip();
+        if(autoCode.equals("H0")){
+            SetDetectionMode(DetectionMode.PowerCells);
+        } else {
+            SetDetectionMode(DetectionMode.PowerPort);
+        }
         SmartDashboard.putBoolean("Vis_HasTarget", hasTarget());
         SmartDashboard.putString("Vis_TargetPos", hasTarget() ? lastTarget[0].getY()+", "+lastTarget[0].getZ() 
                                                                 : "N/A");
