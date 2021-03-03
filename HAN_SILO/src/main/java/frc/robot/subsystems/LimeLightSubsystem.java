@@ -119,6 +119,8 @@ public class LimeLightSubsystem extends SubsystemBase {
 
         //Keep the light off so we don't blind unfortunate spectators
         disableLED(false);
+
+        SmartDashboard.putString("SelectedGalactic", "None");
     }
 
     @Override
