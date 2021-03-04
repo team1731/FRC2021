@@ -170,7 +170,7 @@ public class _DelayableStrafingAutoMode {
                 trajectory = new Trajectory(maintainTrajectory(trajectory.getStates(), value)); break;
             case CONVERT_TO_METERS: 
                 // NOTE: conversion is done before this point, so just maintain trajectory at this point
-                //trajectory = new Trajectory(maintainTrajectory(trajectory.getStates(), value)); break;
+              //  trajectory = new Trajectory(maintainTrajectory(trajectory.getStates(), value)); break;
             case DO_NOTHING: // do not alter trajectory
         }
         Utils.printTrajectory(this.getClass().getSimpleName() + ": " + name, trajectory);
@@ -189,6 +189,32 @@ public class _DelayableStrafingAutoMode {
             convertedPoints[i] = poseToConvert;
         }
         return convertedPoints;
+    }
+
+    public Command createSwerveCommand(DriveSubsystem m_robotDrive, String name, double endingHeading, Trajectory trajectory) {
+        return new _InstrumentedSwerveControllerCommand(
+            m_robotDrive.getCSVWriter(),
+            trajectory, //trajectory was created by PathWeaver and read-in from a file
+            endingHeading, //pass this value through
+            m_robotDrive::getPose, //Functional interface to feed supplier
+            DriveConstants.kDriveKinematics,
+
+            //Position controllers
+            new PIDController(AutoConstants.kPXController, 0, 0),
+            new PIDController(AutoConstants.kPYController, 0, 0),
+            new ProfiledPIDController(AutoConstants.kPThetaController, 0, 0,
+                                    AutoConstants.kThetaControllerConstraints),
+
+            m_robotDrive::setModuleStates,
+            m_robotDrive
+        )
+        {
+            @Override
+            public void end(boolean interrupted) {
+              super.end(interrupted);
+              System.out.println("at end of swerve command, interrupted=" + interrupted);
+            }
+        };
     }
 
     public _InstrumentedSwerveControllerCommand createSwerveCommand(DriveSubsystem m_robotDrive, String name, TrajectoryDirection dir, TrajectoryHeading mode, double value, double[][] points){
