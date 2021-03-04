@@ -5,6 +5,8 @@ import java.nio.file.Path;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -37,13 +39,16 @@ public class H3_Bounce extends _DelayableStrafingAutoMode {
         } catch (IOException ex) {
             DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON1, ex.getStackTrace());
         }
-        m_robotDrive.resetOdometry(trajectory1.getInitialPose()); //because PathWeaver path uses absolute field coords
+        Pose2d initialPoseTrajectory = trajectory1.getInitialPose();
+        Pose2d initialPose = new Pose2d(initialPoseTrajectory.getX(), initialPoseTrajectory.getY(), Rotation2d.fromDegrees(-90));
+
+        m_robotDrive.resetOdometry(initialPose); //because PathWeaver path uses absolute field coords
         SequentialCommandGroup commandGroup = new SequentialCommandGroup(new WaitCommand(getInitialDelaySeconds()),
 
-                createSwerveCommand(m_robotDrive, "Bounce: start zone to A3", 0, trajectory1),
-                createSwerveCommand(m_robotDrive, "Bounce: A3 to A6", 0, trajectory2),
-                createSwerveCommand(m_robotDrive, "Bounce: A6 to A9", 0, trajectory3),
-                createSwerveCommand(m_robotDrive, "Bounce: A9 to finish zone", 0, trajectory4));
+                createSwerveCommand(m_robotDrive, "Bounce: start zone to A3", -90, trajectory1),
+                createSwerveCommand(m_robotDrive, "Bounce: A3 to A6", -90, trajectory2),
+                createSwerveCommand(m_robotDrive, "Bounce: A6 to A9", -90, trajectory3),
+                createSwerveCommand(m_robotDrive, "Bounce: A9 to finish zone", -90, trajectory4));
 
                 // createSwerveCommand(m_robotDrive, "Bounce: start zone to A3",
                 // TrajectoryDirection.REV,
