@@ -203,8 +203,7 @@ public class _DelayableStrafingAutoMode {
             //Position controllers
             new PIDController(AutoConstants.kPXController, 0, 0),
             new PIDController(AutoConstants.kPYController, 0, 0),
-            new ProfiledPIDController(AutoConstants.kPThetaController, 0, 0,
-                                    AutoConstants.kThetaControllerConstraints),
+            new PIDController(AutoConstants.kPThetaController, 0, 0),
 
             m_robotDrive::setModuleStates,
             m_robotDrive
@@ -232,8 +231,7 @@ public class _DelayableStrafingAutoMode {
             //Position controllers
             new PIDController(AutoConstants.kPXController, 0, 0),
             new PIDController(AutoConstants.kPYController, 0, 0),
-            new ProfiledPIDController(AutoConstants.kPThetaController, 0, 0,
-                                    AutoConstants.kThetaControllerConstraints),
+            new PIDController(AutoConstants.kPThetaController, 0, 0),
 
             m_robotDrive::setModuleStates,
             m_robotDrive

@@ -40,6 +40,7 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
  */
 public class Robot extends TimedRobot {
 
+  private _NamedAutoMode namedAutoMode;
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
 
@@ -65,6 +66,36 @@ public class Robot extends TimedRobot {
     //m_ledstring.init();
   }
 
+  private void autoInitPreload(){
+    System.out.println("autoInitPreload: Start");
+    m_robotDrive.resetOdometry(new Pose2d());
+    m_ledstring.option(LedOption.RAINBOW);
+
+    m_robotDrive.resumeCSVWriter();
+    m_sequencer.setPowerCellCount((int) SmartDashboard.getNumber("INIT CELL COUNT", 3));
+
+    if (RobotBase.isReal()) {
+      autoCode = SmartDashboard.getString("AUTO CODE", autoCode);
+    }
+    System.out.println("AUTO CODE retrieved from Dashboard --> " + autoCode);
+    if (autoCode == null || autoCode.length() < 2) {
+      autoCode = AutoConstants.kDEFAULT_AUTO_CODE;
+    }
+    autoCode = autoCode.toUpperCase();
+    System.out.println("AUTO CODE being used by the software --> " + autoCode);
+
+    m_autonomousCommand = null;
+    namedAutoMode = m_robotContainer.getNamedAutonomousCommand(autoCode);
+    if(namedAutoMode != null){
+      System.out.println("autoInitPreload: getCommand Auto Begin");
+      m_autonomousCommand = namedAutoMode.getCommand();
+      System.out.println("autoInitPreload: getCommand Auto Complete");
+    }
+    else{
+      System.err.println("UNABLE TO EXECUTE SELECTED AUTONOMOUS MODE!!");
+    }
+    System.out.println("autoInitPreload: End");
+  }
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -99,6 +130,7 @@ public class Robot extends TimedRobot {
       autoCode = SmartDashboard.getString("AUTO CODE", autoCode);
     }
         
+    autoInitPreload();
     
     SmartDashboard.putBoolean("Vis_HasTarget", false);
     SmartDashboard.putNumber("Vis_TargetAngle", 0);
@@ -154,6 +186,16 @@ public class Robot extends TimedRobot {
       SmartDashboard.putBoolean("MidSensor",  m_sequencer.midSensorHasBall());
       SmartDashboard.putBoolean("HighSensor",  m_sequencer.highSensorHasBall());
     }
+
+    if (RobotBase.isReal()) {
+      String newCode = SmartDashboard.getString("AUTO CODE", autoCode);
+      if (!newCode.equals(autoCode)){
+        autoCode = newCode;
+        System.out.println("New Auto Code read from dashboard - initializing.");
+        autoInitPreload();
+      }
+    }
+
    }
 
   /**
@@ -173,45 +215,24 @@ public class Robot extends TimedRobot {
       autoCode = SmartDashboard.getString("AUTO CODE", autoCode);
     }
 
-
-
-
-
-
-
-
     System.out.println("AUTO CODE retrieved from Dashboard --> " + autoCode);
     if (autoCode == null || autoCode.length() < 2) {
       autoCode = AutoConstants.kDEFAULT_AUTO_CODE;
     }
     autoCode = autoCode.toUpperCase();
     System.out.println("AUTO CODE being used by the software --> " + autoCode);
+    System.out.println("autonomousInit: Start");
 
-    m_autonomousCommand = null;
-    _NamedAutoMode namedAutoMode = m_robotContainer.getNamedAutonomousCommand(autoCode);
-    if(namedAutoMode != null){
-      m_autonomousCommand = namedAutoMode.getCommand();
+    CommandScheduler.getInstance().cancelAll(); ///????????????????????????????????????????? SHOULD WE DO THIS????? ******************
 
-      // schedule the autonomous command (example)
-      if (m_autonomousCommand == null) {
-        System.err.println("SOMETHING WENT WRONG - UNABLE TO RUN AUTONOMOUS! CHECK SOFTWARE!");
-      } else {
-        System.out.println("Running actual autonomous mode --> " + namedAutoMode.name);
-        m_autonomousCommand.schedule();
-      }
+    // schedule the autonomous command (example)
+    if (m_autonomousCommand == null) {
+      System.err.println("SOMETHING WENT WRONG - UNABLE TO RUN AUTONOMOUS! CHECK SOFTWARE!");
+    } else {
+      System.out.println("Running actual autonomous mode --> " + namedAutoMode.name);
+      m_autonomousCommand.schedule();
     }
-
-
-
-
-
-
-
-
-
-    else{
-      System.err.println("UNABLE TO EXECUTE SELECTED AUTONOMOUS MODE!!");
-    }
+    System.out.println("autonomousInit: End");
   }
 
   /**
