@@ -193,6 +193,7 @@ public class _DelayableStrafingAutoMode {
 
     public Command createSwerveCommand(DriveSubsystem m_robotDrive, String name, double endingHeading, Trajectory trajectory) {
         return new _InstrumentedSwerveControllerCommand(
+            m_robotDrive,
             m_robotDrive.getCSVWriter(),
             trajectory, //trajectory was created by PathWeaver and read-in from a file
             endingHeading, //pass this value through
@@ -222,6 +223,7 @@ public class _DelayableStrafingAutoMode {
             points = convertPoints(points);
         }
         return new _InstrumentedSwerveControllerCommand(
+            m_robotDrive,
             m_robotDrive.getCSVWriter(),
             createTrajectory(name, dir, mode, value, points),
             m_robotDrive::getPose, //Functional interface to feed supplier
