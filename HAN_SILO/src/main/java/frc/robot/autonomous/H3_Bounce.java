@@ -46,9 +46,9 @@ public class H3_Bounce extends _DelayableStrafingAutoMode {
         SequentialCommandGroup commandGroup = new SequentialCommandGroup(new WaitCommand(getInitialDelaySeconds()),
 
                 createSwerveCommand(m_robotDrive, "Bounce: start zone to A3", 90, trajectory1),
-                createSwerveCommand(m_robotDrive, "Bounce: A3 to A6", 0, trajectory2),
-                createSwerveCommand(m_robotDrive, "Bounce: A6 to A9", 0, trajectory3),
-                createSwerveCommand(m_robotDrive, "Bounce: A9 to finish zone", 0, trajectory4));
+                createSwerveCommand(m_robotDrive, "Bounce: A3 to A6", 90, trajectory2),
+                createSwerveCommand(m_robotDrive, "Bounce: A6 to A9", 90, trajectory3),
+                createSwerveCommand(m_robotDrive, "Bounce: A9 to finish zone", 90, trajectory4));
 
                 // createSwerveCommand(m_robotDrive, "Bounce: start zone to A3",
                 // TrajectoryDirection.REV,
