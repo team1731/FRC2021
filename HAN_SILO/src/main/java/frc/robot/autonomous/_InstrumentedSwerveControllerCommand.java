@@ -50,7 +50,7 @@ public class _InstrumentedSwerveControllerCommand extends CommandBase {
   private SwerveDriveKinematics m_kinematics;
   private PIDController m_xController;
   private PIDController m_yController;
-  private ProfiledPIDController m_thetaController;
+  private PIDController m_thetaController;
   private Consumer<SwerveModuleState[]> m_outputModuleStates;
   private ReflectingCSVWriter csvWriter;
   private Double endingHeading;
@@ -89,7 +89,7 @@ public class _InstrumentedSwerveControllerCommand extends CommandBase {
                                SwerveDriveKinematics kinematics,
                                PIDController xController,
                                PIDController yController,
-                               ProfiledPIDController thetaController,
+                               PIDController thetaController,
 
                                Consumer<SwerveModuleState[]> outputModuleStates,
                                Subsystem... requirements) {
@@ -121,7 +121,7 @@ public class _InstrumentedSwerveControllerCommand extends CommandBase {
                                SwerveDriveKinematics kinematics,
                                PIDController xController,
                                PIDController yController,
-                               ProfiledPIDController thetaController,
+                               PIDController thetaController,
 
                                Consumer<SwerveModuleState[]> outputModuleStates,
                                Subsystem... requirements) {

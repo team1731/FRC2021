@@ -40,6 +40,7 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
  */
 public class Robot extends TimedRobot {
 
+  private _NamedAutoMode namedAutoMode;
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
 
@@ -65,6 +66,36 @@ public class Robot extends TimedRobot {
     //m_ledstring.init();
   }
 
+  private void autoInitPreload(){
+    System.out.println("autoInitPreload: Start");
+    m_robotDrive.resetOdometry(new Pose2d());
+    m_ledstring.option(LedOption.RAINBOW);
+
+    m_robotDrive.resumeCSVWriter();
+    m_sequencer.setPowerCellCount((int) SmartDashboard.getNumber("INIT CELL COUNT", 3));
+
+    if (RobotBase.isReal()) {
+      autoCode = SmartDashboard.getString("AUTO CODE", autoCode);
+    }
+    System.out.println("AUTO CODE retrieved from Dashboard --> " + autoCode);
+    if (autoCode == null || autoCode.length() < 2) {
+      autoCode = AutoConstants.kDEFAULT_AUTO_CODE;
+    }
+    autoCode = autoCode.toUpperCase();
+    System.out.println("AUTO CODE being used by the software --> " + autoCode);
+
+    m_autonomousCommand = null;
+    _NamedAutoMode namedAutoMode = m_robotContainer.getNamedAutonomousCommand(autoCode);
+    if(namedAutoMode != null){
+      System.out.println("autoInitPreload: getCommand Auto Begin");
+      m_autonomousCommand = namedAutoMode.getCommand();
+      System.out.println("autoInitPreload: getCommand Auto Complete");
+    }
+    else{
+      System.err.println("UNABLE TO EXECUTE SELECTED AUTONOMOUS MODE!!");
+    }
+    System.out.println("autoInitPreload: End");
+  }
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -91,6 +122,7 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer(m_ledstring, m_robotDrive, m_intake, m_sequencer, m_shootclimb, m_vision);
 
     initSubsystems();
+    autoInitPreload();
 
     SmartDashboard.putString("INIT CELL COUNT", "3"); // How much ammo we start with
 
@@ -163,39 +195,18 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    System.out.println("autonomousInit: Start");
+
     CommandScheduler.getInstance().cancelAll(); ///????????????????????????????????????????? SHOULD WE DO THIS????? ******************
-    m_robotDrive.resetOdometry(new Pose2d());
-    m_ledstring.option(LedOption.RAINBOW);
 
-    m_robotDrive.resumeCSVWriter();
-    m_sequencer.setPowerCellCount((int) SmartDashboard.getNumber("INIT CELL COUNT", 3));
-
-    if (RobotBase.isReal()) {
-      autoCode = SmartDashboard.getString("AUTO CODE", autoCode);
+    // schedule the autonomous command (example)
+    if (m_autonomousCommand == null) {
+      System.err.println("SOMETHING WENT WRONG - UNABLE TO RUN AUTONOMOUS! CHECK SOFTWARE!");
+    } else {
+      System.out.println("Running actual autonomous mode --> " + namedAutoMode.name);
+      m_autonomousCommand.schedule();
     }
-    System.out.println("AUTO CODE retrieved from Dashboard --> " + autoCode);
-    if (autoCode == null || autoCode.length() < 2) {
-      autoCode = AutoConstants.kDEFAULT_AUTO_CODE;
-    }
-    autoCode = autoCode.toUpperCase();
-    System.out.println("AUTO CODE being used by the software --> " + autoCode);
-
-    m_autonomousCommand = null;
-    _NamedAutoMode namedAutoMode = m_robotContainer.getNamedAutonomousCommand(autoCode);
-    if(namedAutoMode != null){
-      m_autonomousCommand = namedAutoMode.getCommand();
-
-      // schedule the autonomous command (example)
-      if (m_autonomousCommand == null) {
-        System.err.println("SOMETHING WENT WRONG - UNABLE TO RUN AUTONOMOUS! CHECK SOFTWARE!");
-      } else {
-        System.out.println("Running actual autonomous mode --> " + namedAutoMode.name);
-        m_autonomousCommand.schedule();
-      }
-    }
-    else{
-      System.err.println("UNABLE TO EXECUTE SELECTED AUTONOMOUS MODE!!");
-    }
+    System.out.println("autonomousInit: End");
   }
 
   /**
