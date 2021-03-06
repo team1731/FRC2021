@@ -187,6 +187,16 @@ public class Robot extends TimedRobot {
       SmartDashboard.putBoolean("MidSensor",  m_sequencer.midSensorHasBall());
       SmartDashboard.putBoolean("HighSensor",  m_sequencer.highSensorHasBall());
     }
+
+    if (RobotBase.isReal()) {
+      String newCode = SmartDashboard.getString("AUTO CODE", autoCode);
+      if (!newCode.equals(autoCode)){
+        autoCode = newCode;
+        System.out.println("New Auto Code read from dashboard - initializing.");
+        autoInitPreload();
+      }
+    }
+
    }
 
   /**
