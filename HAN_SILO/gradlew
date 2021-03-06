@@ -23,9 +23,11 @@
 ##############################################################################
 
 echo "Creating Git branch identifier..."
-branchInfo=src/main/deploy/DeployedBranchInfo.txt
+branchInfo=src/main/deploy/DeployedBranchInfo~.txt
 \cp ../.git/HEAD $branchInfo
-echo "" >> $branchInfo
+echo "Commit hash:" >> $branchInfo
+git rev-parse HEAD >> $branchInfo
+echo "---" >> $branchInfo
 echo "Deployed on:" >> $branchInfo
 date >> $branchInfo
 echo Git branch identifier created in $branchInfo

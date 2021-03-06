@@ -22,9 +22,11 @@
 @rem ##########################################################################
 
 ECHO Creating Git branch identifier...
-SET branchInfo=src\main\deploy\DeployedBranchInfo.txt
+SET branchInfo=src\main\deploy\DeployedBranchInfo~.txt
 COPY /Y ..\.git\HEAD %branchInfo%
-ECHO >> %branchInfo%
+ECHO Commit hash: >> %branchInfo%
+"C:\Program Files\Git\bin\git" rev-parse HEAD >> %branchinfo%
+ECHO --- >> %branchInfo%
 ECHO Built on: >> %branchInfo%
 DATE /T >> %branchInfo%
 TIME /T >> %branchInfo%
