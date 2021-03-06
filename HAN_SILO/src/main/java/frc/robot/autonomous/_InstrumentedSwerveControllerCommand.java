@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.util.ReflectingCSVWriter;
+import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.util.AutoSwerveDebug;
 
 import static edu.wpi.first.wpilibj.util.ErrorMessages.requireNonNullParam;
@@ -43,6 +44,7 @@ public class _InstrumentedSwerveControllerCommand extends CommandBase {
   private final Timer m_timer = new Timer();
   private Pose2d m_finalPose;
 
+  private DriveSubsystem m_drive;
   private Trajectory m_trajectory;
   private Supplier<Pose2d> m_pose;
   private SwerveDriveKinematics m_kinematics;
@@ -80,6 +82,7 @@ public class _InstrumentedSwerveControllerCommand extends CommandBase {
 
   @SuppressWarnings("ParameterName")
   public _InstrumentedSwerveControllerCommand(
+                               DriveSubsystem drive,
                                ReflectingCSVWriter<AutoSwerveDebug> csvWriter,
                                Trajectory trajectory,
                                Supplier<Pose2d> pose,
@@ -90,6 +93,7 @@ public class _InstrumentedSwerveControllerCommand extends CommandBase {
 
                                Consumer<SwerveModuleState[]> outputModuleStates,
                                Subsystem... requirements) {
+    m_drive = drive;
     this.csvWriter = csvWriter;
     m_trajectory = requireNonNullParam(trajectory, "trajectory", "SwerveControllerCommand");
     m_pose = requireNonNullParam(pose, "pose", "SwerveControllerCommand");
@@ -109,6 +113,7 @@ public class _InstrumentedSwerveControllerCommand extends CommandBase {
 
   @SuppressWarnings("ParameterName")
   public _InstrumentedSwerveControllerCommand(
+                               DriveSubsystem drive,
                                ReflectingCSVWriter<AutoSwerveDebug> csvWriter,
                                Trajectory trajectory,
                                double endingHeading, //this is used to "fix up" a supplied trajectory
@@ -120,6 +125,7 @@ public class _InstrumentedSwerveControllerCommand extends CommandBase {
 
                                Consumer<SwerveModuleState[]> outputModuleStates,
                                Subsystem... requirements) {
+    m_drive = drive;
     this.csvWriter = csvWriter;
     this.endingHeading = endingHeading;
     m_trajectory = requireNonNullParam(trajectory, "trajectory", "SwerveControllerCommand");
@@ -169,7 +175,8 @@ public class _InstrumentedSwerveControllerCommand extends CommandBase {
                                    desiredPose.getRotation().getDegrees(),
                                    m_pose.get().getTranslation().getX(),
                                    m_pose.get().getTranslation().getY(),
-                                   m_pose.get().getRotation().getDegrees()));
+                                   m_pose.get().getRotation().getDegrees(),
+                                   m_drive.getAngle().getDegrees()));
 
  //  var feedForwardX = desiredState.poseMeters.getRotation().getSin()*desiredState.velocityMetersPerSecond;                              
 
