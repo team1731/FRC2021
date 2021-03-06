@@ -85,7 +85,7 @@ public class Robot extends TimedRobot {
     System.out.println("AUTO CODE being used by the software --> " + autoCode);
 
     m_autonomousCommand = null;
-    _NamedAutoMode namedAutoMode = m_robotContainer.getNamedAutonomousCommand(autoCode);
+    namedAutoMode = m_robotContainer.getNamedAutonomousCommand(autoCode);
     if(namedAutoMode != null){
       System.out.println("autoInitPreload: getCommand Auto Begin");
       m_autonomousCommand = namedAutoMode.getCommand();
