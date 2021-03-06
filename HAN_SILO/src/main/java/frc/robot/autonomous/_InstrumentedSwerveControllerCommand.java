@@ -198,8 +198,9 @@ public class _InstrumentedSwerveControllerCommand extends CommandBase {
     targetYVel += vRef * desiredState.poseMeters.getRotation().getSin();
 
     
+  
 
-    var targetChassisSpeeds = new ChassisSpeeds(targetXVel, targetYVel, targetAngularVel);
+    var targetChassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(targetXVel, targetYVel, targetAngularVel,m_pose.get().getRotation());
 
     var targetModuleStates = m_kinematics.toSwerveModuleStates(targetChassisSpeeds);
 
