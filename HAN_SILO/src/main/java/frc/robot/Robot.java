@@ -107,13 +107,12 @@ public class Robot extends TimedRobot {
     //SmartDashboard.putString("Vis_TargetProcessed", "Empty");
     
     try {
-      File branchInfo = new File(Filesystem.getDeployDirectory()+"/branchDeployed");
+      File branchInfo = new File(Filesystem.getDeployDirectory()+"/DeployedBranchInfo~.txt");
       Scanner reader = new Scanner(branchInfo);
-      String branchName = reader.nextLine();
-      SmartDashboard.putString("Branch Name", branchName);
+      SmartDashboard.putString("Branch Info", reader.next());
     } catch (FileNotFoundException fnf){
-      SmartDashboard.putString("Branch Name", "N/A");
-      System.err.println("branchDeployed not found");
+      SmartDashboard.putString("Branch Info", "N/A");
+      System.err.println("DeployedBranchInfo not found");
       fnf.printStackTrace();
     }
   }
@@ -173,6 +172,14 @@ public class Robot extends TimedRobot {
     if (RobotBase.isReal()) {
       autoCode = SmartDashboard.getString("AUTO CODE", autoCode);
     }
+
+
+
+
+
+
+
+
     System.out.println("AUTO CODE retrieved from Dashboard --> " + autoCode);
     if (autoCode == null || autoCode.length() < 2) {
       autoCode = AutoConstants.kDEFAULT_AUTO_CODE;
@@ -193,6 +200,15 @@ public class Robot extends TimedRobot {
         m_autonomousCommand.schedule();
       }
     }
+
+
+
+
+
+
+
+
+
     else{
       System.err.println("UNABLE TO EXECUTE SELECTED AUTONOMOUS MODE!!");
     }
