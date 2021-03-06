@@ -122,7 +122,6 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer(m_ledstring, m_robotDrive, m_intake, m_sequencer, m_shootclimb, m_vision);
 
     initSubsystems();
-    autoInitPreload();
 
     SmartDashboard.putString("INIT CELL COUNT", "3"); // How much ammo we start with
 
@@ -131,6 +130,7 @@ public class Robot extends TimedRobot {
       autoCode = SmartDashboard.getString("AUTO CODE", autoCode);
     }
         
+    autoInitPreload();
     
     SmartDashboard.putBoolean("Vis_HasTarget", false);
     SmartDashboard.putNumber("Vis_TargetAngle", 0);
