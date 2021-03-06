@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
@@ -18,10 +17,10 @@ import frc.robot.subsystems.DriveSubsystem;
 // This is the bounce path with the robot starting at the start one and driving forwards.
 public class H3_Bounce extends _DelayableStrafingAutoMode {
     public H3_Bounce(DriveSubsystem m_robotDrive) {
-        String trajectoryJSON1 = "paths/Bounce1.wpilib.json";
-        String trajectoryJSON2 = "paths/Bounce2.wpilib.json";
-        String trajectoryJSON3 = "paths/Bounce3.wpilib.json";
-        String trajectoryJSON4 = "paths/Bounce4.wpilib.json";
+        String trajectoryJSON1 = "paths/output/Bounce1.wpilib.json";
+        String trajectoryJSON2 = "paths/output/Bounce2.wpilib.json";
+        String trajectoryJSON3 = "paths/output/Bounce3.wpilib.json";
+        String trajectoryJSON4 = "paths/output/Bounce4.wpilib.json";
 
         Trajectory trajectory1 = new Trajectory();
         Trajectory trajectory2 = new Trajectory();
