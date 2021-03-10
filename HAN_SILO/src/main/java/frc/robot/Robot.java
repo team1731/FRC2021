@@ -107,13 +107,13 @@ public class Robot extends TimedRobot {
     //SmartDashboard.putString("Vis_TargetProcessed", "Empty");
     
     try {
-      File branchInfo = new File(Filesystem.getDeployDirectory()+"/branchDeployed");
+      File branchInfo = new File(Filesystem.getDeployDirectory()+"/DeployedBranchInfo.txt");
       Scanner reader = new Scanner(branchInfo);
       String branchName = reader.nextLine();
-      SmartDashboard.putString("Branch Name", branchName);
+      SmartDashboard.putString("Build Info", branchName);
     } catch (FileNotFoundException fnf){
-      SmartDashboard.putString("Branch Name", "N/A");
-      System.err.println("branchDeployed not found");
+      SmartDashboard.putString("Build Info", "N/A");
+      System.err.println("DeployedBranchInfo.txt not found");
       fnf.printStackTrace();
     }
   }
