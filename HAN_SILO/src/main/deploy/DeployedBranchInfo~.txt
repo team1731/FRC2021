@@ -1,7 +1,0 @@
-ref: refs/heads/daniel
-Commit hash: 
-be846c457e1f3a10ea2f38aafd2357557ccf7bba
---- 
-Built on: 
-Tue 03/09/2021 
-21:02
