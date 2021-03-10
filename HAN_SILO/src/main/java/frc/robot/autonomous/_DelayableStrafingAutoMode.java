@@ -191,11 +191,38 @@ public class _DelayableStrafingAutoMode {
         return convertedPoints;
     }
 
+    public Command createSwerveCommand(DriveSubsystem m_robotDrive, String name, double endingHeading, Trajectory trajectory) {
+        return new _InstrumentedSwerveControllerCommand(
+            m_robotDrive,
+            m_robotDrive.getCSVWriter(),
+            trajectory, //trajectory was created by PathWeaver and read-in from a file
+            endingHeading, //pass this value through
+            m_robotDrive::getPose, //Functional interface to feed supplier
+            DriveConstants.kDriveKinematics,
+
+            //Position controllers
+            new PIDController(AutoConstants.kPXController, 0, 0),
+            new PIDController(AutoConstants.kPYController, 0, 0),
+            new PIDController(AutoConstants.kPThetaController, 0, 0),
+
+            m_robotDrive::setModuleStates,
+            m_robotDrive
+        )
+        {
+            @Override
+            public void end(boolean interrupted) {
+              super.end(interrupted);
+              System.out.println("at end of swerve command, interrupted=" + interrupted);
+            }
+        };
+    }
+
     public _InstrumentedSwerveControllerCommand createSwerveCommand(DriveSubsystem m_robotDrive, String name, TrajectoryDirection dir, TrajectoryHeading mode, double value, double[][] points){
         if (mode == TrajectoryHeading.CONVERT_TO_METERS){
             points = convertPoints(points);
         }
         return new _InstrumentedSwerveControllerCommand(
+            m_robotDrive,
             m_robotDrive.getCSVWriter(),
             createTrajectory(name, dir, mode, value, points),
             m_robotDrive::getPose, //Functional interface to feed supplier
@@ -204,8 +231,7 @@ public class _DelayableStrafingAutoMode {
             //Position controllers
             new PIDController(AutoConstants.kPXController, 0, 0),
             new PIDController(AutoConstants.kPYController, 0, 0),
-            new ProfiledPIDController(AutoConstants.kPThetaController, 0, 0,
-                                    AutoConstants.kThetaControllerConstraints),
+            new PIDController(AutoConstants.kPThetaController, 0, 0),
 
             m_robotDrive::setModuleStates,
             m_robotDrive

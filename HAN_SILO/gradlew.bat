@@ -38,6 +38,17 @@ ECHO Git branch identifier created in %branchInfo%
 @rem
 @rem ##########################################################################
 
+ECHO Creating Git branch identifier...
+SET branchInfo=src\main\deploy\DeployedBranchInfo~.txt
+COPY /Y ..\.git\HEAD %branchInfo%
+ECHO Commit hash: >> %branchInfo%
+"C:\Program Files\Git\bin\git" rev-parse HEAD >> %branchinfo%
+ECHO --- >> %branchInfo%
+ECHO Built on: >> %branchInfo%
+DATE /T >> %branchInfo%
+TIME /T >> %branchInfo%
+ECHO Git branch identifier created in %branchInfo%
+
 @rem Set local scope for the variables with windows NT shell
 if "%OS%"=="Windows_NT" setlocal
 

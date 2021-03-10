@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
@@ -20,6 +21,7 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.util.ReflectingCSVWriter;
+import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.util.AutoSwerveDebug;
 
 import static edu.wpi.first.wpilibj.util.ErrorMessages.requireNonNullParam;
@@ -42,14 +44,16 @@ public class _InstrumentedSwerveControllerCommand extends CommandBase {
   private final Timer m_timer = new Timer();
   private Pose2d m_finalPose;
 
+  private DriveSubsystem m_drive;
   private Trajectory m_trajectory;
   private Supplier<Pose2d> m_pose;
   private SwerveDriveKinematics m_kinematics;
   private PIDController m_xController;
   private PIDController m_yController;
-  private ProfiledPIDController m_thetaController;
+  private PIDController m_thetaController;
   private Consumer<SwerveModuleState[]> m_outputModuleStates;
   private ReflectingCSVWriter csvWriter;
+  private Double endingHeading;
   /**
    * Constructs a new SwerveControllerCommand that when executed will follow the provided
    * trajectory. This command will not return output voltages but rather raw module states from the
@@ -78,16 +82,18 @@ public class _InstrumentedSwerveControllerCommand extends CommandBase {
 
   @SuppressWarnings("ParameterName")
   public _InstrumentedSwerveControllerCommand(
+                               DriveSubsystem drive,
                                ReflectingCSVWriter<AutoSwerveDebug> csvWriter,
                                Trajectory trajectory,
                                Supplier<Pose2d> pose,
                                SwerveDriveKinematics kinematics,
                                PIDController xController,
                                PIDController yController,
-                               ProfiledPIDController thetaController,
+                               PIDController thetaController,
 
                                Consumer<SwerveModuleState[]> outputModuleStates,
                                Subsystem... requirements) {
+    m_drive = drive;
     this.csvWriter = csvWriter;
     m_trajectory = requireNonNullParam(trajectory, "trajectory", "SwerveControllerCommand");
     m_pose = requireNonNullParam(pose, "pose", "SwerveControllerCommand");
@@ -104,6 +110,40 @@ public class _InstrumentedSwerveControllerCommand extends CommandBase {
       "leftFrontOutput", "SwerveControllerCommand");
     addRequirements(requirements);
   }
+
+  @SuppressWarnings("ParameterName")
+  public _InstrumentedSwerveControllerCommand(
+                               DriveSubsystem drive,
+                               ReflectingCSVWriter<AutoSwerveDebug> csvWriter,
+                               Trajectory trajectory,
+                               double endingHeading, //this is used to "fix up" a supplied trajectory
+                               Supplier<Pose2d> pose,
+                               SwerveDriveKinematics kinematics,
+                               PIDController xController,
+                               PIDController yController,
+                               PIDController thetaController,
+
+                               Consumer<SwerveModuleState[]> outputModuleStates,
+                               Subsystem... requirements) {
+    m_drive = drive;
+    this.csvWriter = csvWriter;
+    this.endingHeading = endingHeading;
+    m_trajectory = requireNonNullParam(trajectory, "trajectory", "SwerveControllerCommand");
+    m_pose = requireNonNullParam(pose, "pose", "SwerveControllerCommand");
+    m_kinematics = requireNonNullParam(kinematics, "kinematics", "SwerveControllerCommand");
+
+    m_xController = requireNonNullParam(xController,
+      "xController", "SwerveControllerCommand");
+    m_yController = requireNonNullParam(yController,
+      "xController", "SwerveControllerCommand");
+    m_thetaController = requireNonNullParam(thetaController,
+      "thetaController", "SwerveControllerCommand");
+
+    m_outputModuleStates = requireNonNullParam(outputModuleStates,
+      "leftFrontOutput", "SwerveControllerCommand");
+    addRequirements(requirements);
+  }
+
 
   @Override
   public void initialize() {
@@ -135,7 +175,8 @@ public class _InstrumentedSwerveControllerCommand extends CommandBase {
                                    desiredPose.getRotation().getDegrees(),
                                    m_pose.get().getTranslation().getX(),
                                    m_pose.get().getTranslation().getY(),
-                                   m_pose.get().getRotation().getDegrees()));
+                                   m_pose.get().getRotation().getDegrees(),
+                                   m_drive.getAngle().getDegrees()));
 
  //  var feedForwardX = desiredState.poseMeters.getRotation().getSin()*desiredState.velocityMetersPerSecond;                              
 
@@ -153,7 +194,7 @@ public class _InstrumentedSwerveControllerCommand extends CommandBase {
     // not following the poses at individual states.
     double targetAngularVel = m_thetaController.calculate(
         m_pose.get().getRotation().getRadians(),
-        m_finalPose.getRotation().getRadians());
+        endingHeading == null ? m_finalPose.getRotation().getRadians() : Rotation2d.fromDegrees(endingHeading).getRadians());
 
     double vRef = desiredState.velocityMetersPerSecond;
 
@@ -164,8 +205,9 @@ public class _InstrumentedSwerveControllerCommand extends CommandBase {
     targetYVel += vRef * desiredState.poseMeters.getRotation().getSin();
 
     
+  
 
-    var targetChassisSpeeds = new ChassisSpeeds(targetXVel, targetYVel, targetAngularVel);
+    var targetChassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(targetXVel, targetYVel, targetAngularVel,m_pose.get().getRotation());
 
     var targetModuleStates = m_kinematics.toSwerveModuleStates(targetChassisSpeeds);
 
