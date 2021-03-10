@@ -17,7 +17,7 @@ import frc.robot.subsystems.DriveSubsystem;
 // This is the bounce path with the robot starting at the start one and driving forwards.
 public class H3_Bounce extends _DelayableStrafingAutoMode {
     public H3_Bounce(DriveSubsystem m_robotDrive) {
-        String trajectoryJSON0 = "paths/output/Bounce0.wpilib.json";
+        String trajectoryJSON0 = "paths/output/BarrelRacing0.wpilib.json";
         String trajectoryJSON1 = "paths/output/Bounce1.wpilib.json";
         String trajectoryJSON2 = "paths/output/Bounce2.wpilib.json";
         String trajectoryJSON3 = "paths/output/Bounce3.wpilib.json";
