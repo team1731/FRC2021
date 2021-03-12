@@ -1,8 +1,8 @@
 {
   "lengthUnit": "Meter",
   "maxVelocity": 3.0,
-  "maxAcceleration": 2.8,
-  "wheelBase": 0.1,
+  "maxAcceleration": 30.0,
+  "wheelBase": 0.001,
   "gameName": "Bounce Path",
   "outputDir": "../../HAN_SILO/src/main/deploy/paths"
 }
