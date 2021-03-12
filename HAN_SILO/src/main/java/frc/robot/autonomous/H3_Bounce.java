@@ -16,6 +16,13 @@ import frc.robot.subsystems.DriveSubsystem;
 
 // This is the bounce path with the robot starting at the start one and driving forwards.
 public class H3_Bounce extends _DelayableStrafingAutoMode {
+    Pose2d initialPose;
+
+    @Override
+    public Pose2d getInitialPose(){
+        return initialPose;
+    }
+    
     public H3_Bounce(DriveSubsystem m_robotDrive) {
         String trajectoryJSON0 = "paths/output/BarrelRacing0.wpilib.json";
         String trajectoryJSON1 = "paths/output/Bounce1.wpilib.json";
@@ -43,7 +50,7 @@ public class H3_Bounce extends _DelayableStrafingAutoMode {
             DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON1, ex.getStackTrace());
         }
         Pose2d initialPoseTrajectory = trajectory0.getInitialPose();
-        Pose2d initialPose = new Pose2d(initialPoseTrajectory.getX(), initialPoseTrajectory.getY(), Rotation2d.fromDegrees(90));
+        initialPose = new Pose2d(initialPoseTrajectory.getX(), initialPoseTrajectory.getY(), Rotation2d.fromDegrees(90));
 
         m_robotDrive.resetOdometry(initialPose); //because PathWeaver path uses absolute field coords
         SequentialCommandGroup commandGroup = new SequentialCommandGroup(new WaitCommand(getInitialDelaySeconds()),
