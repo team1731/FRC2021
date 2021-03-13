@@ -13,12 +13,12 @@ public class DummySwerveModule extends SwerveModule {
 
   private double offsetFromAbsoluteEncoder;
 
-  private int id;
+  //private int id;
   SwerveModuleState dummyState = new SwerveModuleState(0, new Rotation2d(0));
 
   public DummySwerveModule(int driveMotorChannel, int turningMotorChannel) {
     super();
-    id = driveMotorChannel;
+    //id = driveMotorChannel;
   }
 
   public double getDriveEncoderPosition(){

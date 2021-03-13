@@ -142,6 +142,7 @@ public class Robot extends TimedRobot {
         fullText += reader.nextLine();
       }
       SmartDashboard.putString("Build Info", fullText);
+      reader.close();
     } catch (FileNotFoundException fnf){
       SmartDashboard.putString("Build Info", "N/A");
       System.err.println("DeployedBranchInfo~.txt not found");

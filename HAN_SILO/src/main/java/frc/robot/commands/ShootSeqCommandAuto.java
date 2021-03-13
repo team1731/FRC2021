@@ -4,12 +4,12 @@ import frc.robot.subsystems.SequencerSubsystem;
 import frc.robot.subsystems.ShootClimbSubsystem;
 
 public class ShootSeqCommandAuto extends ShootSeqCommand {
-    private ShootClimbSubsystem shootSubsystem;
+    //private ShootClimbSubsystem shootSubsystem;
     private SequencerSubsystem seqSubsystem;
 
     public ShootSeqCommandAuto(ShootClimbSubsystem shoot, SequencerSubsystem sequence) {
         super(shoot, sequence);
-        this.shootSubsystem = shoot;
+        //this.shootSubsystem = shoot;
         this.seqSubsystem = sequence;
     }
 

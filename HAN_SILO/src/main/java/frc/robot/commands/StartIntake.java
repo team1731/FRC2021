@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class StartIntake extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final IntakeSubsystem m_IntakeSubsystem;
-  private final SequencerSubsystem m_SeqSubsystem;
+  //private final SequencerSubsystem m_SeqSubsystem;
   /**
    * Creates a new ExampleCommand.
    *
@@ -26,7 +26,7 @@ public class StartIntake extends CommandBase {
    */
   public StartIntake(IntakeSubsystem intakeSubsystem, SequencerSubsystem seqSubsystem) {
     m_IntakeSubsystem = intakeSubsystem;
-    m_SeqSubsystem = seqSubsystem;
+    //m_SeqSubsystem = seqSubsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(intakeSubsystem, seqSubsystem);
   }

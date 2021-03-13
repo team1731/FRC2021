@@ -9,7 +9,6 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.OpConstants;
-import edu.wpi.first.wpilibj.PWMTalonFX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -17,13 +16,12 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.InterruptHandlerFunction;
 
 //import edu.wpi.first.wpilibj.Timer;
 
 public class SequencerSubsystem extends SubsystemBase {
 
-  private final LedStringSubsystem m_ledstring;
+  //private final LedStringSubsystem m_ledstring;
   private final TalonFX mTalonSeq;
   private DigitalInput mLowSensor;
   private DigitalInput mMidSensor;
@@ -43,7 +41,7 @@ public class SequencerSubsystem extends SubsystemBase {
  * @param m_ledstring
    */
   public SequencerSubsystem(LedStringSubsystem m_ledstring) {
-    this.m_ledstring = m_ledstring;
+    //this.m_ledstring = m_ledstring;
     mTalonSeq = new TalonFX(OpConstants.kMotorSeq);
     mTalonSeq.configFactoryDefault();
     mTalonSeq.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, OpConstants.kPIDLoopIdx, OpConstants.kTimeoutMs);

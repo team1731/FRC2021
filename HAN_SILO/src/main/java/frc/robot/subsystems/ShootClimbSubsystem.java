@@ -15,18 +15,16 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 import frc.robot.Constants;
 import frc.robot.Constants.OpConstants;
-import frc.robot.Constants.OpConstants.LedOption;
 
 public class ShootClimbSubsystem extends SubsystemBase {
 
-  private final LedStringSubsystem m_ledstring;
+  //private final LedStringSubsystem m_ledstring;
   private DoubleSolenoid mShootClimbSolenoid;
   private DoubleSolenoid mClimberSolenoid;
   private DoubleSolenoid mShootHoodSolenoid;
@@ -38,7 +36,7 @@ public class ShootClimbSubsystem extends SubsystemBase {
   private final DigitalInput sLoCylinder;
   private final DigitalInput sClimbExtend;
   private final DigitalInput sClimbRetract;
-  private boolean isHoodExtended;
+  //private boolean isHoodExtended;
   private double targetVelocity_UnitsPer100ms;
 
   
@@ -47,7 +45,7 @@ public class ShootClimbSubsystem extends SubsystemBase {
  * @param m_ledstring
    */
   public ShootClimbSubsystem(LedStringSubsystem m_ledstring) {
-    this.m_ledstring = m_ledstring;
+    //this.m_ledstring = m_ledstring;
     mShootClimbSolenoid = Constants.makeDoubleSolenoidForIds(0, OpConstants.k0Shooting, OpConstants.k0Climbing);
     mClimberSolenoid = Constants.makeDoubleSolenoidForIds(1, OpConstants.k1ClimbRetract, OpConstants.k1ClimbExtend);
     mShootHoodSolenoid = Constants.makeDoubleSolenoidForIds(1, OpConstants.k1HoodRetract, OpConstants.k1HoodExtend);
@@ -177,6 +175,7 @@ public class ShootClimbSubsystem extends SubsystemBase {
   //  }
   }
 
+  /*
   private void spinUpShooter(double desiredVelocity){
     for(int i = 0; i < 100; i += 10){
       mTalonShoot1.set(ControlMode.Velocity, desiredVelocity*i/100);
@@ -191,6 +190,7 @@ public class ShootClimbSubsystem extends SubsystemBase {
     mTalonShoot1.set(ControlMode.Velocity, desiredVelocity);
     mTalonShoot2.set(ControlMode.Velocity, desiredVelocity);
   }
+  */
 
   //public void enableShooting(double shootMotorPercent_0_to_1) {
     //mShootClimbSolenoid.set(DoubleSolenoid.Value.kReverse);
@@ -213,12 +213,12 @@ public class ShootClimbSubsystem extends SubsystemBase {
 
   public void hoodRetract() {
     mShootHoodSolenoid.set(DoubleSolenoid.Value.kReverse);
-    isHoodExtended = false;
+    //isHoodExtended = false;
   }
 
   public void hoodExtend() {
     mShootHoodSolenoid.set(DoubleSolenoid.Value.kForward);
-    isHoodExtended = true;
+    //isHoodExtended = true;
   }
 
   public void setClimber(double percentOut) {

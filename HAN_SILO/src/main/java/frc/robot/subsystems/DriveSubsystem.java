@@ -134,7 +134,7 @@ public class DriveSubsystem extends SubsystemBase {
     this.driveSpeedScaler = 0.5 * (axis + 1);
   }
 
-  public ReflectingCSVWriter getCSVWriter() {
+  public ReflectingCSVWriter<AutoSwerveDebug> getCSVWriter() {
     return mCSVWriter1;
   }
 

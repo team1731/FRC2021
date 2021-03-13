@@ -20,8 +20,6 @@ import com.revrobotics.ColorSensorV3;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorMatch;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 /**
  * 1731 the Color Wheel rotates (3-5 times) & matches colors
  * 
@@ -39,7 +37,7 @@ public class ColorWheelSubsystem extends SubsystemBase {
   private int colorCount;
   private int colorSample;
   private int wheelCount;
-  private double matchConfidence;
+  //private double matchConfidence;
   private WheelState mWheelState;
 
   public static final int[] colorSeq = {
@@ -189,13 +187,14 @@ public class ColorWheelSubsystem extends SubsystemBase {
     handleColorWheel(WheelMode.MATCH);
   }
 
-
+  /*
   private Color getColor() {
     //Color detectedColor = mColorSensor.getColor();
-    /* The sensor returns a raw IR value of the infrared light detected. */
+    //The sensor returns a raw IR value of the infrared light detected.
     //double IR = mColorSensor.getIR();
     return mColorSensor.getColor();
   }
+  */
 
   private int getMatch() {
     Color detectedColor = mColorSensor.getColor();
@@ -203,7 +202,7 @@ public class ColorWheelSubsystem extends SubsystemBase {
     /* Run the color match algorithm on our detected color */
     int colorId;
     ColorMatchResult match = mColorMatcher.matchClosestColor(detectedColor);
-    matchConfidence = match.confidence;
+    //matchConfidence = match.confidence;
 
     if (match.color == OpConstants.kBlueTarget) {
         colorId = OpConstants.kWheelBlue;
@@ -253,7 +252,7 @@ public class ColorWheelSubsystem extends SubsystemBase {
       * SmartDashboard.putBoolean("ElevRevSw",
       * mTalon.getSensorCollection().isRevLimitSwitchClosed());
       */
-     Color detectedColor = getColor();
+     //Color detectedColor = getColor();
      //SmartDashboard.putNumber("Red", detectedColor.red);
      //SmartDashboard.putNumber("Green", detectedColor.green);
      //SmartDashboard.putNumber("Blue", detectedColor.blue);

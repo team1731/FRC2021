@@ -10,9 +10,6 @@ package frc.robot.commands;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SequencerSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj.Timer;
-
-import frc.robot.Constants.OpConstants;
 
 /**
  * An example command that uses an example subsystem.
@@ -20,8 +17,8 @@ import frc.robot.Constants.OpConstants;
 public class SeqEjectCommand extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final IntakeSubsystem m_IntakeSubsystem;
-  private final SequencerSubsystem m_SeqSubsystem;
-  private Timer mTimer;
+  //private final SequencerSubsystem m_SeqSubsystem;
+  //private Timer mTimer;
   double elapsed;
 
   /**
@@ -32,7 +29,7 @@ public class SeqEjectCommand extends CommandBase {
    */
   public SeqEjectCommand(IntakeSubsystem intakeSubsystem, SequencerSubsystem seqSubsystem) {
     m_IntakeSubsystem = intakeSubsystem;
-    m_SeqSubsystem = seqSubsystem;
+    //m_SeqSubsystem = seqSubsystem;
    // mTimer = new Timer();
   
     // Use addRequirements() here to declare subsystem dependencies.

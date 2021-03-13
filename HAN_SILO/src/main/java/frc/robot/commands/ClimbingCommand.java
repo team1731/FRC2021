@@ -11,7 +11,6 @@ import java.util.function.DoubleSupplier;
 
 import frc.robot.Constants.OpConstants;
 import frc.robot.subsystems.ShootClimbSubsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
@@ -91,7 +90,7 @@ public class ClimbingCommand extends CommandBase {
              (m_ShootClimbSubsystem.getClimbEncoderValue() < OpConstants.kClimbExSafeEncValue) 
                || isHiCy) ) 
          ||
-        (isCyRetracting && !isClimbRt)) { //TODO: how to use isLoCy ????
+        (isCyRetracting && !isClimbRt)) { //WADE: how to use isLoCy ????
           m_ShootClimbSubsystem.setClimber(climbPercent * OpConstants.kClimbJoystickInvert);
     } else {
       m_ShootClimbSubsystem.setClimber(0);

@@ -39,7 +39,6 @@ import static edu.wpi.first.wpilibj.util.ErrorMessages.requireNonNullParam;
  * the trajectory but rather goes to the angle given in the final state of the trajectory.
  */
 
-@SuppressWarnings("MemberName")
 public class _InstrumentedSwerveControllerCommand extends CommandBase {
   private final Timer m_timer = new Timer();
   private Pose2d m_finalPose;
@@ -52,7 +51,7 @@ public class _InstrumentedSwerveControllerCommand extends CommandBase {
   private PIDController m_yController;
   private PIDController m_thetaController;
   private Consumer<SwerveModuleState[]> m_outputModuleStates;
-  private ReflectingCSVWriter csvWriter;
+  private ReflectingCSVWriter<AutoSwerveDebug> csvWriter;
   private Double endingHeading;
   /**
    * Constructs a new SwerveControllerCommand that when executed will follow the provided
@@ -167,7 +166,7 @@ public class _InstrumentedSwerveControllerCommand extends CommandBase {
     
     
 
-    Pose2d poseError = desiredPose.relativeTo(m_pose.get());
+    //Pose2d poseError = desiredPose.relativeTo(m_pose.get());
 
     csvWriter.add(new AutoSwerveDebug(curTime, 
                                    desiredPose.getTranslation().getX(),
