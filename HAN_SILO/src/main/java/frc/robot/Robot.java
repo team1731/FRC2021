@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.JevoisVisionSubsystem;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.OpConstants.LedOption;
 import frc.robot.autonomous._NamedAutoMode;
@@ -134,9 +133,6 @@ public class Robot extends TimedRobot {
     
     SmartDashboard.putBoolean("Vis_HasTarget", false);
     SmartDashboard.putNumber("Vis_TargetAngle", 0);
-    //Old data for JeVois
-    //SmartDashboard.putString("Vis_TargetString", "Empty");
-    //SmartDashboard.putString("Vis_TargetProcessed", "Empty");
     
     try {
       File branchInfo = new File(Filesystem.getDeployDirectory()+"/DeployedBranchInfo~.txt");
