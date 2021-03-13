@@ -137,10 +137,14 @@ public class Robot extends TimedRobot {
     try {
       File branchInfo = new File(Filesystem.getDeployDirectory()+"/DeployedBranchInfo~.txt");
       Scanner reader = new Scanner(branchInfo);
-      SmartDashboard.putString("Branch Info", reader.next());
+      String fullText = "";
+      while(reader.hasNext()){
+        fullText += reader.nextLine();
+      }
+      SmartDashboard.putString("Build Info", fullText);
     } catch (FileNotFoundException fnf){
-      SmartDashboard.putString("Branch Info", "N/A");
-      System.err.println("DeployedBranchInfo not found");
+      SmartDashboard.putString("Build Info", "N/A");
+      System.err.println("DeployedBranchInfo~.txt not found");
       fnf.printStackTrace();
     }
   }
@@ -200,32 +204,22 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    CommandScheduler.getInstance().cancelAll(); ///????????????????????????????????????????? SHOULD WE DO THIS????? ******************
-  //  m_robotDrive.resetOdometry(new Pose2d());
     m_ledstring.option(LedOption.RAINBOW);
-
     m_robotDrive.resumeCSVWriter();
     m_sequencer.setPowerCellCount((int) SmartDashboard.getNumber("INIT CELL COUNT", 3));
 
-    if (RobotBase.isReal()) {
-      autoCode = SmartDashboard.getString("AUTO CODE", autoCode);
-    }
-
-    System.out.println("AUTO CODE retrieved from Dashboard --> " + autoCode);
-    if (autoCode == null || autoCode.length() < 2) {
-      autoCode = AutoConstants.kDEFAULT_AUTO_CODE;
-    }
-    autoCode = autoCode.toUpperCase();
-    System.out.println("AUTO CODE being used by the software --> " + autoCode);
-    System.out.println("autonomousInit: Start");
-
-    CommandScheduler.getInstance().cancelAll(); ///????????????????????????????????????????? SHOULD WE DO THIS????? ******************
+    CommandScheduler.getInstance().cancelAll();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand == null) {
       System.err.println("SOMETHING WENT WRONG - UNABLE TO RUN AUTONOMOUS! CHECK SOFTWARE!");
     } else {
       System.out.println("Running actual autonomous mode --> " + namedAutoMode.name);
+      m_robotDrive.zeroHeading();
+      Pose2d initialPose = namedAutoMode.getInitialPose();
+      if(initialPose != null){
+        m_robotDrive.resetOdometry(initialPose);
+      }
       m_autonomousCommand.schedule();
     }
     System.out.println("autonomousInit: End");

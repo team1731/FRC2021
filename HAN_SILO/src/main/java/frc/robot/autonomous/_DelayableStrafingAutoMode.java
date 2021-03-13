@@ -23,6 +23,10 @@ public class _DelayableStrafingAutoMode {
     private int secondaryDelaySeconds;
     Command command;
   
+    public Pose2d getInitialPose(){
+        return null;
+    }
+
     public _DelayableStrafingAutoMode(int initialDelaySeconds, int secondaryDelaySeconds) {
         this.initialDelaySeconds = initialDelaySeconds;
         this.secondaryDelaySeconds = secondaryDelaySeconds;

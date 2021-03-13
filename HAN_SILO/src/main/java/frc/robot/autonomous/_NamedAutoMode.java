@@ -1,5 +1,6 @@
 package frc.robot.autonomous;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class _NamedAutoMode {
@@ -7,6 +8,10 @@ public class _NamedAutoMode {
     public String name = "UNKNOWN";
     public _DelayableStrafingAutoMode delayableStrafingAutoMode;
     
+    public Pose2d getInitialPose(){
+        return delayableStrafingAutoMode.getInitialPose();
+    }
+
     public _NamedAutoMode(_DelayableStrafingAutoMode delayableStrafingAutoMode)
             throws _NotImplementedProperlyException {
         if(delayableStrafingAutoMode != null){
@@ -39,4 +44,5 @@ public class _NamedAutoMode {
     public Command getCommand(){
         return delayableStrafingAutoMode.getCommand();
     }
+
 }
