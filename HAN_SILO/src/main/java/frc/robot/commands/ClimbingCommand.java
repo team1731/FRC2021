@@ -90,7 +90,7 @@ public class ClimbingCommand extends CommandBase {
              (m_ShootClimbSubsystem.getClimbEncoderValue() < OpConstants.kClimbExSafeEncValue) 
                || isHiCy) ) 
          ||
-        (isCyRetracting && !isClimbRt)) { //TODO: how to use isLoCy ????
+        (isCyRetracting && !isClimbRt)) { //WADE: how to use isLoCy ????
           m_ShootClimbSubsystem.setClimber(climbPercent * OpConstants.kClimbJoystickInvert);
     } else {
       m_ShootClimbSubsystem.setClimber(0);
