@@ -175,9 +175,6 @@ public class ShootClimbSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("talon1Velocity", mTalonShoot1.getSelectedSensorVelocity());
       SmartDashboard.putNumber("talon1Velocity2", mTalonShoot2.getSelectedSensorVelocity());
   //  }
-    if (!isHoodExtended) {
-      hoodExtend();
-    }
   }
 
   private void spinUpShooter(double desiredVelocity){
@@ -206,7 +203,6 @@ public class ShootClimbSubsystem extends SubsystemBase {
   public void stopShooting(){
     mTalonShoot1.set(ControlMode.PercentOutput, 0);
     mTalonShoot2.set(ControlMode.PercentOutput, 0);
-    hoodRetract();
     shootMode();
   }
 

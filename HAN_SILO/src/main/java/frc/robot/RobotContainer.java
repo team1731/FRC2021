@@ -12,10 +12,15 @@ import java.util.Map;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.geometry.Transform2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.XboxController;
 //import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.autonomous.BlueA;
+import frc.robot.autonomous.BlueB;
 import frc.robot.autonomous.F1_Move_Forward;
 import frc.robot.autonomous.H0_GalacticSearch;
 import frc.robot.autonomous.H1_BarrelRacing;
@@ -26,6 +31,8 @@ import frc.robot.autonomous.M1_Shoot3_Front3_Shoot3;
 import frc.robot.autonomous.M3_Shoot3_Buddy5;
 import frc.robot.autonomous.R1_WholeSide10;
 import frc.robot.autonomous.R2_Shoot3_FriendlyTriple;
+import frc.robot.autonomous.RedA;
+import frc.robot.autonomous.RedB;
 import frc.robot.autonomous.T3_DriveForwardIntakeDriveBackward;
 import frc.robot.autonomous.T4_ShootDriveForward;
 import frc.robot.autonomous.T5_ShootDriveBackward;
@@ -34,12 +41,11 @@ import frc.robot.autonomous._NotImplementedProperlyException;
 import frc.robot.commands.*;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.JevoisVisionSubsystem;
 import frc.robot.subsystems.LedStringSubsystem;
 import frc.robot.subsystems.LimeLightSubsystem;
 import frc.robot.subsystems.SequencerSubsystem;
 import frc.robot.subsystems.ShootClimbSubsystem;
-
+import frc.robot.vision.LimeTargetInfo;
 //import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 //import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -145,9 +151,7 @@ public class RobotContainer {
     new JoystickButton(m_driverController, XboxConstants.kRBumper)
       .whenActive(new VisionRotateCommand(m_vision, m_robotDrive, m_driverController));
 
-    //new JoystickButton(m_driverController, XboxConstants.kLBumper)
-    //  .whenActive(new VisionDistanceCommand(m_vision, m_robotDrive, m_driverController));
-
+    //Shoot far command
     new JoystickButton(m_operatorController, 8) // convert -1 to +1 TO 0 to 1
       .whileActiveContinuous(() -> m_shootclimb.spinShooter((m_operatorController.getRawAxis(4)+1)/2))
       .whenInactive(() -> m_shootclimb.stopShooting());
@@ -166,6 +170,11 @@ public class RobotContainer {
     new JoystickButton(m_operatorController, 15).whileActiveContinuous(
       new IntakeSeqCommand(m_intake, m_sequencer)
     );
+
+    //Shoot close command
+    new JoystickButton(m_operatorController, 10) // convert -1 to +1 TO 0 to 1
+      .whileActiveContinuous(() -> m_shootclimb.hoodExtend())
+      .whenInactive(() -> m_shootclimb.hoodRetract());
     
 
     // Climbing Command - CURRENT
@@ -261,6 +270,8 @@ public class RobotContainer {
     }
 
     _NamedAutoMode selectedAutoMode = null;
+
+    
     try{
       selectedAutoMode = createNamedAutoMode(autoMode);
     }

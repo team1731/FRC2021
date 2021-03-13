@@ -75,6 +75,10 @@ public final class Constants {
 
     public static final double kMaxSpeedMetersPerSecond = 3;   //tune
 
+    public static final double kTurnP = 0.05;
+    public static final double kTurnI = 0;
+    public static final double kTurnD = 0;
+
   }
 
 
@@ -297,9 +301,9 @@ public final class Constants {
         //#endregion
 
         //#region TurnPID
-        public static final double kTurnP = 0.05;
+        public static final double kTurnP = 0.12;
         public static final double kTurnI = 0;
-        public static final double kTurnD = 0;
+        public static final double kTurnD = 0.01;
         public static final double kMaxTurnVelocity = 360;
         public static final double kMaxTurnAcceleration = 360;
         public static final double kTurnToleranceDeg = 5;

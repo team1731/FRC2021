@@ -9,7 +9,6 @@ import frc.robot.commands.IntakeSeqCommand;
 import frc.robot.commands.ShootSeqCommandAuto;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.JevoisVisionSubsystem;
 import frc.robot.subsystems.SequencerSubsystem;
 import frc.robot.subsystems.ShootClimbSubsystem;
 

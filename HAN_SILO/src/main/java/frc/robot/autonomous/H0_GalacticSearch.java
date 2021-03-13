@@ -1,5 +1,6 @@
 package frc.robot.autonomous;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.IntakeSeqCommand;
@@ -13,9 +14,10 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
     public H0_GalacticSearch(DriveSubsystem m_robotDrive, IntakeSubsystem m_intake, SequencerSubsystem m_sequence,
     LimeLightSubsystem m_limelight) {
         SequentialCommandGroup commandGroup = null;
-        int field_orientation = 0;//m_limelight.getFieldOrientation(); 
+        int field_orientation = m_limelight.getFieldOrientation(); 
         switch(field_orientation){
             case 0: //Red A (C3, D5, A6)
+                SmartDashboard.putString("SelectedGalactic", "RedA");
                 commandGroup = new SequentialCommandGroup(
                     new IntakeSeqCommand(m_intake, m_sequence, true),
                     createSwerveCommand(m_robotDrive, "Red A", TrajectoryDirection.REV, 
@@ -31,6 +33,7 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
                 );
                 break;
             case 1: //Red B (B3, D5, B7)
+                SmartDashboard.putString("SelectedGalactic", "RedB");
                 commandGroup = new SequentialCommandGroup(
                     new IntakeSeqCommand(m_intake, m_sequence, true),
                     createSwerveCommand(m_robotDrive, "Red B", TrajectoryDirection.REV, 
@@ -46,6 +49,7 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
                 );
                 break;
             case 2: //Blue A (E6, B7, C9)
+                SmartDashboard.putString("SelectedGalactic", "BlueA");
                 commandGroup = new SequentialCommandGroup(
                     new IntakeSeqCommand(m_intake, m_sequence, true),
                     createSwerveCommand(m_robotDrive, "Blue A", TrajectoryDirection.REV, 
@@ -61,6 +65,7 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
                 );
                 break;
             case 3: //Blue B (D6, B8, D10)
+                SmartDashboard.putString("SelectedGalactic", "BlueB");
                 commandGroup = new SequentialCommandGroup(
                     new IntakeSeqCommand(m_intake, m_sequence, true),
                     createSwerveCommand(m_robotDrive, "Blue B", TrajectoryDirection.REV, 

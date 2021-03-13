@@ -45,7 +45,7 @@ public class DriveSubsystem extends SubsystemBase {
   private double desiredHeading;
 
   private final ProfiledPIDController headingController
-     = new ProfiledPIDController(VisionConstants.kTurnP, VisionConstants.kTurnI, VisionConstants.kTurnD,
+     = new ProfiledPIDController(DriveConstants.kTurnP, DriveConstants.kTurnI, DriveConstants.kTurnD,
        new TrapezoidProfile.Constraints(VisionConstants.kMaxTurnVelocity, VisionConstants.kMaxTurnAcceleration));
 
   private final ProfiledPIDController visionDistanceController
@@ -119,6 +119,13 @@ public class DriveSubsystem extends SubsystemBase {
     mCSVWriter2 = new ReflectingCSVWriter<>(SwerveModuleDebug.class);
     m_timer.reset();
     m_timer.start();
+
+    //PID tuning
+    /*
+    SmartDashboard.putNumber("VisionP", VisionConstants.kTurnP);
+    SmartDashboard.putNumber("VisionI", VisionConstants.kTurnI);
+    SmartDashboard.putNumber("VisionD", VisionConstants.kTurnD);
+    */
 
     this.m_vision = m_vision;
   }
@@ -232,7 +239,7 @@ public class DriveSubsystem extends SubsystemBase {
     ySpeedAdjusted *= this.driveSpeedScaler;
 
     //If the right stick is neutral - this code should lock on the last known heading 
-    if(Math.abs(rotationalOutput) < 0.1){
+    if(Math.abs(rotationalOutput) < 0.11){
       headingOverride = true;
       if (lockedHeading == null) {
         headingController.reset(getHeading());
@@ -253,18 +260,19 @@ public class DriveSubsystem extends SubsystemBase {
     if (visionHeadingOverride || headingOverride) {
 
     
-    if(visionHeadingOverride){
-      rotationalOutput = headingController.calculate(getHeading());
-      desiredHeading = getHeading();
-      SmartDashboard.putNumber("headingController Output", rotationalOutput);
-    } else {
-      //headingController.reset(getHeading());
-      //desiredHeading += rotationalOutput*2.5;
-      rotationalOutput = headingController.calculate(getHeading(), desiredHeading);
-      SmartDashboard.putNumber("desiredHeading", desiredHeading);
-      SmartDashboard.putNumber("headingController Output", rotationalOutput);
+      if(visionHeadingOverride){
+        rotationalOutput = headingController.calculate(getHeading());
+        desiredHeading = getHeading();
+        lockedHeading = getHeading();
+        SmartDashboard.putNumber("headingController Output", rotationalOutput);
+      } else {
+        //headingController.reset(getHeading());
+        //desiredHeading += rotationalOutput*2.5;
+        rotationalOutput = headingController.calculate(getHeading(), desiredHeading);
+        SmartDashboard.putNumber("desiredHeading", desiredHeading);
+        SmartDashboard.putNumber("headingController Output", rotationalOutput);
+      }
     }
-  }
 
     /*
     if(Math.abs(rotationalOutput) < 0.1){
@@ -274,10 +282,10 @@ public class DriveSubsystem extends SubsystemBase {
 
     if(visionDistanceOverride){
       //This allows the driver to still have forward/backward control of the robot while getting to optimal shooting in case something is in the way
-      xSpeedAdjusted = Utils.Clamp(xSpeedAdjusted + visionDistanceController.calculate(m_vision.getLastTarget().getZ()), 0, 1);
+      xSpeedAdjusted = Utils.Clamp(xSpeedAdjusted + visionDistanceController.calculate(m_vision.getLastPortPos().getZ()), 0, 1);
       SmartDashboard.putNumber("distanceController Output", ySpeedAdjusted);
     } else {
-      visionDistanceController.reset(m_vision.getLastTarget().getZ());
+      visionDistanceController.reset(m_vision.getLastPortPos().getZ());
     }
     
 
@@ -378,6 +386,9 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void setVisionHeadingOverride(boolean visionOverride){
     visionHeadingOverride = visionOverride;
+    headingController.setP(visionOverride ? VisionConstants.kTurnP : DriveConstants.kTurnP);
+    headingController.setI(visionOverride ? VisionConstants.kTurnI : DriveConstants.kTurnI);
+    headingController.setD(visionOverride ? VisionConstants.kTurnD : DriveConstants.kTurnD);
   }
 
   public void setVisionDistanceOverride(boolean visionOverride){
