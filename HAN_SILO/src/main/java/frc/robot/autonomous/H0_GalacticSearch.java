@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.IntakeExtend;
@@ -47,11 +48,13 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
                 }
 
                 initialPoseTrajectory = redATrajectory.getInitialPose();
-                initialPose = new Pose2d(initialPoseTrajectory.getX(), initialPoseTrajectory.getY(), Rotation2d.fromDegrees(90));
+                initialPose = new Pose2d(initialPoseTrajectory.getX(), initialPoseTrajectory.getY(), Rotation2d.fromDegrees(-180));
 
                 commandGroup = new SequentialCommandGroup(new WaitCommand(getInitialDelaySeconds()),
-                new IntakeExtend(m_intake),
-                createSwerveCommand(m_robotDrive, "RedA: entire path", 90, redATrajectory),
+                new ParallelCommandGroup(
+                    new IntakeSeqCommand(m_intake, m_sequence, true),
+                    createSwerveCommand(m_robotDrive, "RedA: entire path", -180, redATrajectory)
+                ),
                 new IntakeRetract(m_intake));
                 break;
             case 1: //Red B (B3, D5, B7)
@@ -66,11 +69,11 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
                 }
 
                 initialPoseTrajectory = redBTrajectory.getInitialPose();
-                initialPose = new Pose2d(initialPoseTrajectory.getX(), initialPoseTrajectory.getY(), Rotation2d.fromDegrees(90));
+                initialPose = new Pose2d(initialPoseTrajectory.getX(), initialPoseTrajectory.getY(), Rotation2d.fromDegrees(-180));
 
                 commandGroup = new SequentialCommandGroup(new WaitCommand(getInitialDelaySeconds()),
                 new IntakeExtend(m_intake),
-                createSwerveCommand(m_robotDrive, "RedB: entire path", 90, redBTrajectory),
+                createSwerveCommand(m_robotDrive, "RedB: entire path", -180, redBTrajectory),
                 new IntakeRetract(m_intake));
                 break;
             case 2: //Blue A (E6, B7, C9)
@@ -85,11 +88,11 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
                 }
 
                 initialPoseTrajectory = blueATrajectory.getInitialPose();
-                initialPose = new Pose2d(initialPoseTrajectory.getX(), initialPoseTrajectory.getY(), Rotation2d.fromDegrees(90));
+                initialPose = new Pose2d(initialPoseTrajectory.getX(), initialPoseTrajectory.getY(), Rotation2d.fromDegrees(-180));
 
                 commandGroup = new SequentialCommandGroup(new WaitCommand(getInitialDelaySeconds()),
                 new IntakeExtend(m_intake),
-                createSwerveCommand(m_robotDrive, "BlueA: entire path", 90, blueATrajectory),
+                createSwerveCommand(m_robotDrive, "BlueA: entire path", -180, blueATrajectory),
                 new IntakeRetract(m_intake));
                 break;
             case 3: //Blue B (D6, B8, D10)
@@ -104,11 +107,11 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
                 }
 
                 initialPoseTrajectory = blueBTrajectory.getInitialPose();
-                initialPose = new Pose2d(initialPoseTrajectory.getX(), initialPoseTrajectory.getY(), Rotation2d.fromDegrees(90));
+                initialPose = new Pose2d(initialPoseTrajectory.getX(), initialPoseTrajectory.getY(), Rotation2d.fromDegrees(-180));
 
                 commandGroup = new SequentialCommandGroup(new WaitCommand(getInitialDelaySeconds()),
                 new IntakeExtend(m_intake),
-                createSwerveCommand(m_robotDrive, "BlueB: entire path", 90, blueBTrajectory),
+                createSwerveCommand(m_robotDrive, "BlueB: entire path", -180, blueBTrajectory),
                 new IntakeRetract(m_intake));
                 break;
         }       
