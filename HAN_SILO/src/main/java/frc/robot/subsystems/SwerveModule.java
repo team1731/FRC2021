@@ -12,7 +12,6 @@ import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -31,7 +30,7 @@ public class SwerveModule {
   private CANPIDController m_drivePIDController;
   private CANPIDController m_turningPIDController;
 
-  private double offsetFromAbsoluteEncoder;
+  //private double offsetFromAbsoluteEncoder;
 
   private int id;
   private Boolean isInverted = Boolean.FALSE;
@@ -136,6 +135,7 @@ public double getDriveEncoderPosition(){
    *
    * @param zero zero setpoint, absolute encoder position (in ticks) where wheel is zeroed.
    */
+  /*
   private void setAzimuthZero(double zeroSetpointAbsoluteEncoderVoltage) { // 0.0 to 3.26, 180=1.63V
     offsetFromAbsoluteEncoder = zeroSetpointAbsoluteEncoderVoltage * 16/3.26;
     //SmartDashboard.putNumber("offsetFromAbsoluteEncoder"+id, offsetFromAbsoluteEncoder);
@@ -146,15 +146,16 @@ public double getDriveEncoderPosition(){
     //azimuthTalon.set(MotionMagic, azimuthSetpoint);
     //azimuthSpark.set(azimuthSetpoint);
     //m_pidController.setReference(azimuthSetpoint, ControlType.kSmartMotion);
-    //m_turningEncoder.setPosition(0); // TODO change whith 221 encoder
-    //TODO FIXME change voltage to position 0 to 12!!
+    //m_turningEncoder.setPosition(0);
+    
     //logger.info("<b>Wheel</b>: setAzimuthZero finished");
   }
+  */
 
   /*public double getAzimuthAbsolutePosition() {
     //return azimuthTalon.getSensorCollection().getPulseWidthPosition() & 0xFFF;
     //return (int)azimuthSpark.get() & 0xFFF;
-    //TODO - need to return azimuth from the 221 encoder
+    
     double rawEncoder = 0;
     if(RobotBase.isReal()){
       rawEncoder = m_turningEncoder.getPosition();
@@ -171,7 +172,6 @@ public double getDriveEncoderPosition(){
    */
   public SwerveModuleState getState() {
     //return new SwerveModuleState(m_driveEncoder.getRate(), new Rotation2d(m_turningEncoder.get()));
-        //FIXME: apply any needed unit convertion here...
     double velocity = 0;
     double azimuth = 0;
     if(RobotBase.isReal()){ // RPM/60 is RPS *PI*D is inches/s * 39.37 is meter/s but it's 5.5 ticks/rev

@@ -15,8 +15,6 @@ import frc.robot.autonomous.RedB;
 import frc.robot.autonomous.GalacticConfiguration;
 import frc.robot.vision.LimeTargetInfo;
 
-import java.lang.reflect.Field;
-
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;

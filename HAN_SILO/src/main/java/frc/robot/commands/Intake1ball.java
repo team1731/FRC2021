@@ -19,7 +19,6 @@
 */
 package frc.robot.commands;
 
-import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SequencerSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -30,9 +29,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class Intake1ball extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final SequencerSubsystem m_SeqSubsystem;
-  private boolean low;
-  private boolean mid;
-  private boolean high;
+  //private boolean low;
+  //private boolean mid;
+  //private boolean high;
 
   /**
    * Creates a new Intake Sequence Command.

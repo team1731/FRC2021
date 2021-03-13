@@ -7,20 +7,13 @@
 
 package frc.robot;
 
-import java.util.HashMap;
-import java.util.Map;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.geometry.Transform2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.XboxController;
 //import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.autonomous.BlueA;
-import frc.robot.autonomous.BlueB;
 import frc.robot.autonomous.F1_Move_Forward;
 import frc.robot.autonomous.H0_GalacticSearch;
 import frc.robot.autonomous.H1_BarrelRacing;
@@ -31,8 +24,6 @@ import frc.robot.autonomous.M1_Shoot3_Front3_Shoot3;
 import frc.robot.autonomous.M3_Shoot3_Buddy5;
 import frc.robot.autonomous.R1_WholeSide10;
 import frc.robot.autonomous.R2_Shoot3_FriendlyTriple;
-import frc.robot.autonomous.RedA;
-import frc.robot.autonomous.RedB;
 import frc.robot.autonomous.T3_DriveForwardIntakeDriveBackward;
 import frc.robot.autonomous.T4_ShootDriveForward;
 import frc.robot.autonomous.T5_ShootDriveBackward;
@@ -45,9 +36,6 @@ import frc.robot.subsystems.LedStringSubsystem;
 import frc.robot.subsystems.LimeLightSubsystem;
 import frc.robot.subsystems.SequencerSubsystem;
 import frc.robot.subsystems.ShootClimbSubsystem;
-import frc.robot.vision.LimeTargetInfo;
-//import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-//import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -67,7 +55,7 @@ public class RobotContainer {
   //XboxController m_operatorController = new XboxController(OIConstants.kOperatorControllerPort);
   Joystick m_operatorController = new Joystick(OIConstants.kOperatorControllerPort);
 
-  private LedStringSubsystem m_ledstring;
+  //private LedStringSubsystem m_ledstring;
   private DriveSubsystem m_robotDrive;
   private IntakeSubsystem m_intake;
   private ShootClimbSubsystem m_shootclimb;
@@ -87,7 +75,7 @@ public class RobotContainer {
    */
   public RobotContainer(LedStringSubsystem m_ledstring, DriveSubsystem m_robotDrive, IntakeSubsystem m_intake, SequencerSubsystem m_sequencer,
       ShootClimbSubsystem m_shootclimb, LimeLightSubsystem m_vision) {
-    this.m_ledstring = m_ledstring;
+    //this.m_ledstring = m_ledstring;
     this.m_robotDrive = m_robotDrive;
     this.m_intake = m_intake;
     this.m_sequencer = m_sequencer;

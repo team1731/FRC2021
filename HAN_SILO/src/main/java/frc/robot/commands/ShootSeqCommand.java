@@ -7,11 +7,8 @@
 
 package frc.robot.commands;
 
-import frc.robot.Constants.OpConstants;
-import frc.robot.Constants.OpConstants.LedOption;
 import frc.robot.subsystems.ShootClimbSubsystem;
 import frc.robot.subsystems.SequencerSubsystem;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
@@ -21,7 +18,7 @@ public class ShootSeqCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final ShootClimbSubsystem shootSubsystem;
   private final SequencerSubsystem seqSubsystem;
-  private double startTime;
+  //private double startTime;
 
   /**
    * Creates a new ExampleCommand.
@@ -40,7 +37,7 @@ public class ShootSeqCommand extends CommandBase {
   // If it is used as Default command then it gets call all the time
   @Override
   public void initialize() {
-    startTime = Timer.getFPGATimestamp();
+    //startTime = Timer.getFPGATimestamp();
     //System.out.println("starttime = " + startTime);
     //shootSubsystem.hoodExtend();
     //seqSubsystem.stop();
@@ -49,7 +46,7 @@ public class ShootSeqCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double shootMotorVelocity = shootSubsystem.getShootMotor1Velocity();
+    //double shootMotorVelocity = shootSubsystem.getShootMotor1Velocity();
     //System.out.println("shoot motor velocity = " + shootMotorVelocity);
     if(shootSubsystem.atTargetVelocity()){
       //System.out.println("calling seqSubSystem.forward(true);");

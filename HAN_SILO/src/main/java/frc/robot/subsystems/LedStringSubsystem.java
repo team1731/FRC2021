@@ -11,11 +11,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.util.Color8Bit;
-
-import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-
 
 import frc.robot.Constants.OpConstants;
 
@@ -476,6 +471,9 @@ public class LedStringSubsystem extends SubsystemBase {
         break;
       case BALLFOUR:
         ballCount(4);
+        break;
+      default:
+        teamColors(16);
         break;
     }
     // Set the LEDs

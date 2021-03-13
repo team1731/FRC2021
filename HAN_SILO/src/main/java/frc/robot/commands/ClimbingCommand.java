@@ -11,7 +11,6 @@ import java.util.function.DoubleSupplier;
 
 import frc.robot.Constants.OpConstants;
 import frc.robot.subsystems.ShootClimbSubsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
