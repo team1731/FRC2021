@@ -116,7 +116,7 @@ public class LimeLightSubsystem extends SubsystemBase {
             limeRawArea[i] = limeTable.getEntry("ta"+i);
         }
 
-        //limePipeline.setNumber(2);
+        SetDetectionMode(DetectionMode.PowerCells);
 
         //Keep the light off so we don't blind unfortunate spectators
         disableLED(false);

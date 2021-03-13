@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.XboxConstants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LimeLightSubsystem;
+import frc.robot.subsystems.LimeLightSubsystem.DetectionMode;
 
 /**
  * Rotates the robot towards a vision target
@@ -27,6 +28,7 @@ public class VisionRotateCommand extends CommandBase {
         //Turn on LED and tell the DriveSubsystem to take turning control away from driver
         m_drive.setVisionHeadingOverride(true);
         m_vision.enableLED();
+        m_vision.SetDetectionMode(DetectionMode.PowerPort);
     }
 
     @Override
