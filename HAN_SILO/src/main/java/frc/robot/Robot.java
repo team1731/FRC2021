@@ -195,8 +195,7 @@ public class Robot extends TimedRobot {
         autoInitPreload();
       }
     }
-
-   }
+  }
 
   /**
    * This autonomous runs the autonomous command selected by your
