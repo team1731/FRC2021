@@ -50,6 +50,7 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
                 initialPoseTrajectory = redATrajectory.getInitialPose();
                 initialPose = new Pose2d(initialPoseTrajectory.getX(), initialPoseTrajectory.getY(), Rotation2d.fromDegrees(-180));
 
+                m_robotDrive.resetOdometry(initialPose); //because PathWeaver path uses absolute field coords
                 commandGroup = new SequentialCommandGroup(new WaitCommand(getInitialDelaySeconds()),
                 new ParallelCommandGroup(
                     new IntakeSeqCommand(m_intake, m_sequence, true),
@@ -65,15 +66,17 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
                     Path redBTrajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("paths/output/RedPathB.wpilib.json");
                     redBTrajectory = TrajectoryUtil.fromPathweaverJson(redBTrajectoryPath);
                 } catch (IOException ex){
-                    DriverStation.reportError("Unable to open RedA trajectory", ex.getStackTrace());
+                    DriverStation.reportError("Unable to open RedB trajectory", ex.getStackTrace());
                 }
 
                 initialPoseTrajectory = redBTrajectory.getInitialPose();
                 initialPose = new Pose2d(initialPoseTrajectory.getX(), initialPoseTrajectory.getY(), Rotation2d.fromDegrees(-180));
-
+                m_robotDrive.resetOdometry(initialPose); //because PathWeaver path uses absolute field coords
                 commandGroup = new SequentialCommandGroup(new WaitCommand(getInitialDelaySeconds()),
-                new IntakeExtend(m_intake),
-                createSwerveCommand(m_robotDrive, "RedB: entire path", -180, redBTrajectory),
+                new ParallelCommandGroup(
+                    new IntakeSeqCommand(m_intake, m_sequence, true),
+                    createSwerveCommand(m_robotDrive, "RedB: entire path", -180, redBTrajectory)
+                ),
                 new IntakeRetract(m_intake));
                 break;
             case 2: //Blue A (E6, B7, C9)
@@ -84,15 +87,17 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
                     Path blueATrajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("paths/output/BluePathA.wpilib.json");
                     blueATrajectory = TrajectoryUtil.fromPathweaverJson(blueATrajectoryPath);
                 } catch (IOException ex){
-                    DriverStation.reportError("Unable to open RedA trajectory", ex.getStackTrace());
+                    DriverStation.reportError("Unable to open BlueA trajectory", ex.getStackTrace());
                 }
 
                 initialPoseTrajectory = blueATrajectory.getInitialPose();
                 initialPose = new Pose2d(initialPoseTrajectory.getX(), initialPoseTrajectory.getY(), Rotation2d.fromDegrees(-180));
-
+                m_robotDrive.resetOdometry(initialPose); //because PathWeaver path uses absolute field coords
                 commandGroup = new SequentialCommandGroup(new WaitCommand(getInitialDelaySeconds()),
-                new IntakeExtend(m_intake),
-                createSwerveCommand(m_robotDrive, "BlueA: entire path", -180, blueATrajectory),
+                new ParallelCommandGroup(
+                    new IntakeSeqCommand(m_intake, m_sequence, true),
+                    createSwerveCommand(m_robotDrive, "BlueA: entire path", -180, blueATrajectory)
+                ),
                 new IntakeRetract(m_intake));
                 break;
             case 3: //Blue B (D6, B8, D10)
@@ -103,15 +108,17 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
                     Path blueBTrajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("paths/output/BluePathB.wpilib.json");
                     blueBTrajectory = TrajectoryUtil.fromPathweaverJson(blueBTrajectoryPath);
                 } catch (IOException ex){
-                    DriverStation.reportError("Unable to open RedA trajectory", ex.getStackTrace());
+                    DriverStation.reportError("Unable to open BlueB trajectory", ex.getStackTrace());
                 }
 
                 initialPoseTrajectory = blueBTrajectory.getInitialPose();
                 initialPose = new Pose2d(initialPoseTrajectory.getX(), initialPoseTrajectory.getY(), Rotation2d.fromDegrees(-180));
-
+                m_robotDrive.resetOdometry(initialPose); //because PathWeaver path uses absolute field coords
                 commandGroup = new SequentialCommandGroup(new WaitCommand(getInitialDelaySeconds()),
-                new IntakeExtend(m_intake),
-                createSwerveCommand(m_robotDrive, "BlueB: entire path", -180, blueBTrajectory),
+                new ParallelCommandGroup(
+                    new IntakeSeqCommand(m_intake, m_sequence, true),
+                    createSwerveCommand(m_robotDrive, "BlueB: entire path", -180, blueBTrajectory)
+                ),
                 new IntakeRetract(m_intake));
                 break;
         }       

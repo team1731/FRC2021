@@ -52,7 +52,7 @@ public class H3_Bounce extends _DelayableStrafingAutoMode {
         Pose2d initialPoseTrajectory = trajectory0.getInitialPose();
         initialPose = new Pose2d(initialPoseTrajectory.getX(), initialPoseTrajectory.getY(), Rotation2d.fromDegrees(90));
 
-      //  m_robotDrive.resetOdometry(initialPose); //because PathWeaver path uses absolute field coords
+        m_robotDrive.resetOdometry(initialPose); //because PathWeaver path uses absolute field coords
         SequentialCommandGroup commandGroup = new SequentialCommandGroup(new WaitCommand(getInitialDelaySeconds()),
                 createSwerveCommand(m_robotDrive, "Bounce: entire path", 90, trajectory0),
 
