@@ -38,10 +38,12 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
         switch(field_orientation){
             case 0: //Red A (C3, D5, A6)
                 SmartDashboard.putString("SelectedGalactic", "RedA");
+                System.out.println("\nRunning RedA auto\n");
 
                 Trajectory redATrajectory = new Trajectory();
+                Path redATrajectoryPath = null;
                 try {
-                    Path redATrajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("paths/output/RedPathA.wpilib.json");
+                    redATrajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("paths/output/RedPathA.wpilib.json");
                     redATrajectory = TrajectoryUtil.fromPathweaverJson(redATrajectoryPath);
 
                     initialPoseTrajectory = redATrajectory.getInitialPose();
@@ -55,16 +57,19 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
                     ),
                     new IntakeRetract(m_intake));
                 } catch (IOException ex){
+                    System.out.println("Path not found: "+redATrajectoryPath);
                     DriverStation.reportError("Unable to open RedA trajectory", ex.getStackTrace());
                     commandGroup = new SequentialCommandGroup(new WaitCommand(getInitialDelaySeconds()));
                 }
                 break;
             case 1: //Red B (B3, D5, B7)
                 SmartDashboard.putString("SelectedGalactic", "RedB");
+                System.out.println("\nRunning RedB auto\n");
                 
                 Trajectory redBTrajectory = new Trajectory();
+                Path redBTrajectoryPath = null;
                 try {
-                    Path redBTrajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("paths/output/RedPathB.wpilib.json");
+                    redBTrajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("paths/output/RedPathB.wpilib.json");
                     redBTrajectory = TrajectoryUtil.fromPathweaverJson(redBTrajectoryPath);
 
                     initialPoseTrajectory = redBTrajectory.getInitialPose();
@@ -77,16 +82,19 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
                     ),
                     new IntakeRetract(m_intake));
                 } catch (IOException ex){
+                    System.out.println("Path not found: "+redBTrajectoryPath);
                     DriverStation.reportError("Unable to open RedB trajectory", ex.getStackTrace());
                     commandGroup = new SequentialCommandGroup(new WaitCommand(getInitialDelaySeconds()));
                 }
                 break;
             case 2: //Blue A (E6, B7, C9)
                 SmartDashboard.putString("SelectedGalactic", "BlueA");
+                System.out.println("\nRunning BlueA auto\n");
                 
                 Trajectory blueATrajectory = new Trajectory();
+                Path blueATrajectoryPath = null;
                 try {
-                    Path blueATrajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("paths/output/BluePathA.wpilib.json");
+                    blueATrajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("paths/output/BluePathA.wpilib.json");
                     blueATrajectory = TrajectoryUtil.fromPathweaverJson(blueATrajectoryPath);
 
                     initialPoseTrajectory = blueATrajectory.getInitialPose();
@@ -99,16 +107,19 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
                     ),
                     new IntakeRetract(m_intake));
                 } catch (IOException ex){
+                    System.out.println("Path not found: "+blueATrajectoryPath);
                     DriverStation.reportError("Unable to open BlueA trajectory", ex.getStackTrace());
                     commandGroup = new SequentialCommandGroup(new WaitCommand(getInitialDelaySeconds()));
                 }
                 break;
             case 3: //Blue B (D6, B8, D10)
                 SmartDashboard.putString("SelectedGalactic", "BlueB");
-                
+                System.out.println("\nRunning BlueB auto\n");
+
                 Trajectory blueBTrajectory = new Trajectory();
+                Path blueBTrajectoryPath = null;
                 try {
-                    Path blueBTrajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("paths/output/BluePathB.wpilib.json");
+                    blueBTrajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("paths/output/BluePathB.wpilib.json");
                     blueBTrajectory = TrajectoryUtil.fromPathweaverJson(blueBTrajectoryPath);
 
                     initialPoseTrajectory = blueBTrajectory.getInitialPose();
@@ -121,6 +132,7 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
                     ),
                     new IntakeRetract(m_intake));
                 } catch (IOException ex){
+                    System.out.println("Path not found: "+blueBTrajectoryPath);
                     DriverStation.reportError("Unable to open BlueB trajectory", ex.getStackTrace());
                     commandGroup = new SequentialCommandGroup(new WaitCommand(getInitialDelaySeconds()));
                 }
