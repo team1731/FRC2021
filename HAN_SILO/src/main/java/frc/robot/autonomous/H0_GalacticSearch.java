@@ -48,13 +48,13 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
                 }
 
                 initialPoseTrajectory = redATrajectory.getInitialPose();
-                initialPose = new Pose2d(initialPoseTrajectory.getX(), initialPoseTrajectory.getY(), Rotation2d.fromDegrees(-180));
+                initialPose = new Pose2d(initialPoseTrajectory.getX(), initialPoseTrajectory.getY(), Rotation2d.fromDegrees(-180.0));
 
                 m_robotDrive.resetOdometry(initialPose); //because PathWeaver path uses absolute field coords
                 commandGroup = new SequentialCommandGroup(new WaitCommand(getInitialDelaySeconds()),
                 new ParallelCommandGroup(
                     new IntakeSeqCommand(m_intake, m_sequence, true),
-                    createSwerveCommand(m_robotDrive, "RedA: entire path", -180, redATrajectory)
+                    createSwerveCommand(m_robotDrive, "RedA: entire path", -180.0, redATrajectory)
                 ),
                 new IntakeRetract(m_intake));
                 break;
@@ -70,12 +70,12 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
                 }
 
                 initialPoseTrajectory = redBTrajectory.getInitialPose();
-                initialPose = new Pose2d(initialPoseTrajectory.getX(), initialPoseTrajectory.getY(), Rotation2d.fromDegrees(-180));
+                initialPose = new Pose2d(initialPoseTrajectory.getX(), initialPoseTrajectory.getY(), Rotation2d.fromDegrees(180));
                 m_robotDrive.resetOdometry(initialPose); //because PathWeaver path uses absolute field coords
                 commandGroup = new SequentialCommandGroup(new WaitCommand(getInitialDelaySeconds()),
                 new ParallelCommandGroup(
                     new IntakeSeqCommand(m_intake, m_sequence, true),
-                    createSwerveCommand(m_robotDrive, "RedB: entire path", -180, redBTrajectory)
+                    createSwerveCommand(m_robotDrive, "RedB: entire path", 180, redBTrajectory)
                 ),
                 new IntakeRetract(m_intake));
                 break;
@@ -91,12 +91,12 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
                 }
 
                 initialPoseTrajectory = blueATrajectory.getInitialPose();
-                initialPose = new Pose2d(initialPoseTrajectory.getX(), initialPoseTrajectory.getY(), Rotation2d.fromDegrees(-180));
+                initialPose = new Pose2d(initialPoseTrajectory.getX(), initialPoseTrajectory.getY(), Rotation2d.fromDegrees(180));
                 m_robotDrive.resetOdometry(initialPose); //because PathWeaver path uses absolute field coords
                 commandGroup = new SequentialCommandGroup(new WaitCommand(getInitialDelaySeconds()),
                 new ParallelCommandGroup(
                     new IntakeSeqCommand(m_intake, m_sequence, true),
-                    createSwerveCommand(m_robotDrive, "BlueA: entire path", -180, blueATrajectory)
+                    createSwerveCommand(m_robotDrive, "BlueA: entire path", 180, blueATrajectory)
                 ),
                 new IntakeRetract(m_intake));
                 break;
@@ -112,12 +112,12 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
                 }
 
                 initialPoseTrajectory = blueBTrajectory.getInitialPose();
-                initialPose = new Pose2d(initialPoseTrajectory.getX(), initialPoseTrajectory.getY(), Rotation2d.fromDegrees(-180));
+                initialPose = new Pose2d(initialPoseTrajectory.getX(), initialPoseTrajectory.getY(), Rotation2d.fromDegrees(180));
                 m_robotDrive.resetOdometry(initialPose); //because PathWeaver path uses absolute field coords
                 commandGroup = new SequentialCommandGroup(new WaitCommand(getInitialDelaySeconds()),
                 new ParallelCommandGroup(
                     new IntakeSeqCommand(m_intake, m_sequence, true),
-                    createSwerveCommand(m_robotDrive, "BlueB: entire path", -180, blueBTrajectory)
+                    createSwerveCommand(m_robotDrive, "BlueB: entire path", 180, blueBTrajectory)
                 ),
                 new IntakeRetract(m_intake));
                 break;
