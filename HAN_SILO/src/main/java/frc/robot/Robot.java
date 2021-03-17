@@ -134,6 +134,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Vis_HasTarget", false);
     SmartDashboard.putNumber("Vis_TargetAngle", 0);
     
+    //Report Build Information to the SmartDashboard
     try {
       File branchInfo = new File(Filesystem.getDeployDirectory()+"/DeployedBranchInfo~.txt");
       Scanner reader = new Scanner(branchInfo);
