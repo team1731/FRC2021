@@ -24,17 +24,23 @@ import frc.robot.subsystems.SequencerSubsystem;
 // This is the bounce path with the robot starting at the start one and driving forwards.
 public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
     Pose2d initialPose;
+    Integer field_orientation;
 
     @Override
     public Pose2d getInitialPose(){
         return initialPose;
     }
 
+    @Override
+    public Integer getFieldOrientation(){
+        return field_orientation;
+    }
+
     public H0_GalacticSearch(DriveSubsystem m_robotDrive, IntakeSubsystem m_intake, SequencerSubsystem m_sequence,
     LimeLightSubsystem m_limelight) {
         SequentialCommandGroup commandGroup = null;
         Pose2d initialPoseTrajectory;
-        int field_orientation = m_limelight.getFieldOrientation(); 
+        field_orientation = m_limelight.getFieldOrientation(); 
         switch(field_orientation){
             case 0: //Red A (C3, D5, A6)
                 SmartDashboard.putString("SelectedGalactic", "RedA");

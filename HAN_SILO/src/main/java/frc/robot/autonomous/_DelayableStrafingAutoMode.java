@@ -25,6 +25,10 @@ public class _DelayableStrafingAutoMode {
         return null;
     }
 
+	public Integer getFieldOrientation() {
+		return 1;
+	}
+
     public _DelayableStrafingAutoMode(int initialDelaySeconds, int secondaryDelaySeconds) {
         this.initialDelaySeconds = initialDelaySeconds;
         this.secondaryDelaySeconds = secondaryDelaySeconds;

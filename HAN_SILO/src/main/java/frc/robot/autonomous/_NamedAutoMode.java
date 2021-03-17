@@ -12,6 +12,10 @@ public class _NamedAutoMode {
         return delayableStrafingAutoMode.getInitialPose();
     }
 
+    public Integer getFieldOrientation() {
+		return delayableStrafingAutoMode.getFieldOrientation();
+	}
+
     public _NamedAutoMode(_DelayableStrafingAutoMode delayableStrafingAutoMode)
             throws _NotImplementedProperlyException {
         if(delayableStrafingAutoMode != null){
