@@ -84,6 +84,7 @@ public class SwerveModule {
       m_drivePIDController.setSmartMotionMinOutputVelocity(0, smartMotionSlot);
       m_drivePIDController.setSmartMotionMaxAccel(1500, smartMotionSlot); //RPM per second
       m_drivePIDController.setSmartMotionAllowedClosedLoopError(50, smartMotionSlot);
+
   
       m_turningMotor = new CANSparkMax(turningMotorChannel, MotorType.kBrushless);
       m_turningMotor.restoreFactoryDefaults();

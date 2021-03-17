@@ -137,6 +137,7 @@ public class _InstrumentedSwerveControllerCommand extends CommandBase {
       "xController", "SwerveControllerCommand");
     m_thetaController = requireNonNullParam(thetaController,
       "thetaController", "SwerveControllerCommand");
+    m_thetaController.enableContinuousInput(Math.toRadians(-180), Math.toRadians(180));
 
     m_outputModuleStates = requireNonNullParam(outputModuleStates,
       "leftFrontOutput", "SwerveControllerCommand");

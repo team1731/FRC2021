@@ -108,7 +108,7 @@ public class Robot extends TimedRobot {
     m_ledstring = new LedStringSubsystem();
     m_vision = new LimeLightSubsystem();
     m_robotDrive = new DriveSubsystem(m_vision);
-    m_intake = new IntakeSubsystem(m_ledstring);
+    m_intake = new IntakeSubsystem(/*m_ledstring*/);
     m_sequencer = new SequencerSubsystem(m_ledstring);
     m_shootclimb = new ShootClimbSubsystem(m_ledstring);
     m_colorwheel = null; //new ColorWheelSubsystem();
@@ -219,6 +219,7 @@ public class Robot extends TimedRobot {
       Pose2d initialPose = namedAutoMode.getInitialPose();
       if(initialPose != null){
         m_robotDrive.resetOdometry(initialPose);
+        System.out.println("Initial Pose: "+initialPose.toString());
       }
       m_autonomousCommand.schedule();
     }

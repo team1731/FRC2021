@@ -38,7 +38,7 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
         switch(field_orientation){
             case 0: //Red A (C3, D5, A6)
                 SmartDashboard.putString("SelectedGalactic", "RedA");
-                System.out.println("\nRunning RedA auto\n");
+                System.out.println("\nConstructing RedA auto\n");
 
                 Trajectory redATrajectory = new Trajectory();
                 Path redATrajectoryPath = null;
@@ -47,24 +47,26 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
                     redATrajectory = TrajectoryUtil.fromPathweaverJson(redATrajectoryPath);
 
                     initialPoseTrajectory = redATrajectory.getInitialPose();
-                    initialPose = new Pose2d(initialPoseTrajectory.getX(), initialPoseTrajectory.getY(), Rotation2d.fromDegrees(-180.0));
+                    initialPose = new Pose2d(initialPoseTrajectory.getX(), initialPoseTrajectory.getY(), Rotation2d.fromDegrees(180.0));
 
                     m_robotDrive.resetOdometry(initialPose); //because PathWeaver path uses absolute field coords
                     commandGroup = new SequentialCommandGroup(new WaitCommand(getInitialDelaySeconds()),
                     new ParallelCommandGroup(
                         new IntakeSeqCommand(m_intake, m_sequence, true),
-                        createSwerveCommand(m_robotDrive, "RedA: entire path", -180.0, redATrajectory)
+                        createSwerveCommand(m_robotDrive, "RedA: entire path", 180.0, redATrajectory)
                     ),
                     new IntakeRetract(m_intake));
                 } catch (IOException ex){
-                    System.out.println("Path not found: "+redATrajectoryPath);
+                    //System.out.println("Path not found: "+redATrajectoryPath);
                     DriverStation.reportError("Unable to open RedA trajectory", ex.getStackTrace());
                     commandGroup = new SequentialCommandGroup(new WaitCommand(getInitialDelaySeconds()));
+                } finally {
+                    System.out.println("Path: "+redATrajectoryPath);
                 }
                 break;
             case 1: //Red B (B3, D5, B7)
                 SmartDashboard.putString("SelectedGalactic", "RedB");
-                System.out.println("\nRunning RedB auto\n");
+                System.out.println("\nConstructing RedB auto\n");
                 
                 Trajectory redBTrajectory = new Trajectory();
                 Path redBTrajectoryPath = null;
@@ -89,7 +91,7 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
                 break;
             case 2: //Blue A (E6, B7, C9)
                 SmartDashboard.putString("SelectedGalactic", "BlueA");
-                System.out.println("\nRunning BlueA auto\n");
+                System.out.println("\nConstructing BlueA auto\n");
                 
                 Trajectory blueATrajectory = new Trajectory();
                 Path blueATrajectoryPath = null;
@@ -114,7 +116,7 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
                 break;
             case 3: //Blue B (D6, B8, D10)
                 SmartDashboard.putString("SelectedGalactic", "BlueB");
-                System.out.println("\nRunning BlueB auto\n");
+                System.out.println("\nConstructing BlueB auto\n");
 
                 Trajectory blueBTrajectory = new Trajectory();
                 Path blueBTrajectoryPath = null;
