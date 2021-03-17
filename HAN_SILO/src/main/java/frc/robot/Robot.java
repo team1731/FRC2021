@@ -203,10 +203,12 @@ public class Robot extends TimedRobot {
       if(m_autonomousCommand != null){
         if(m_autonomousCommand.getName().startsWith("H0")){
           Integer newFieldOrientation = namedAutoMode.getFieldOrientation();
-          if(!newFieldOrientation.equals(fieldOrientation)){
-            System.out.println("New Field Orientation detected by LimeLight - initializing.");
-            fieldOrientation = newFieldOrientation;
-            autoInitPreload();
+          if(newFieldOrientation != null){
+            if(!newFieldOrientation.equals(fieldOrientation)){
+              System.out.println("New Field Orientation detected by LimeLight - initializing.");
+              fieldOrientation = newFieldOrientation;
+              autoInitPreload();
+            }
           }
         }
       }
