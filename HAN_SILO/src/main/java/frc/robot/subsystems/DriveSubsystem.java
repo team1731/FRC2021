@@ -99,7 +99,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void updateOdometry(){
     if(m_odometry != null){
       m_odometry.update(
-        new Rotation2d(getHeading()),
+        new Rotation2d(Math.toRadians(getHeading())),
         m_leftFront.getState(),              // leftFront, rightFront, leftRear, rightRear
         m_rightFront.getState(),
         m_leftRear.getState(),
@@ -171,7 +171,7 @@ public class DriveSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("pose x", m_odometry.getPoseMeters().getTranslation().getX());
       SmartDashboard.putNumber("pose y", m_odometry.getPoseMeters().getTranslation().getY());
       SmartDashboard.putNumber("rot deg", m_odometry.getPoseMeters().getRotation().getDegrees());
-      SmartDashboard.putNumber("heading radians", getHeading());    
+      SmartDashboard.putNumber("heading radians", Math.toRadians(getHeading()));    
       SmartDashboard.putNumber("raw gyro", m_gyro.getAngle());
       SmartDashboard.putBoolean("gyro is calibrating", m_gyro.isCalibrating());
     }
