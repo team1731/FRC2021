@@ -4,6 +4,6 @@
   "maxVelocity": 3.0,
   "maxAcceleration": 3.0,
   "wheelBase": 0.001,
-  "gameName": "Slalom Path",
+  "gameName": "Barrel Racing Path",
   "outputDir": "../../HAN_SILO/src/main/deploy/paths"
 }
