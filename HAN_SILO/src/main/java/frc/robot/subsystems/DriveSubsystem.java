@@ -165,7 +165,7 @@ public class DriveSubsystem extends SubsystemBase {
     resumeCSVWriter();
 
     // Update the odometry in the periodic block
-    updateOdometry();
+   // updateOdometry();
 
     if(Robot.doSD()){
       SmartDashboard.putNumber("pose x", m_odometry.getPoseMeters().getTranslation().getX());
