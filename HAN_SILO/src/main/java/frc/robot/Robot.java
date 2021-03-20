@@ -55,6 +55,13 @@ public class Robot extends TimedRobot {
 
   String autoCode = AutoConstants.kDEFAULT_AUTO_CODE;
 
+  public Robot() {
+    addPeriodic(() -> {
+      if(m_robotDrive != null) m_robotDrive.updateOdometry();
+    }, 0.01, 0.005);
+  }
+
+
   private void initSubsystems() {
     // initial SubSystems to at rest states
     m_robotDrive.resetEncoders();
