@@ -165,7 +165,7 @@ public class DriveSubsystem extends SubsystemBase {
     resumeCSVWriter();
 
     // Update the odometry in the periodic block
-   // updateOdometry();
+    // updateOdometry(); --> this is now done by the 'addPeriodic' method in the Robot class constructor
 
     if(Robot.doSD()){
       SmartDashboard.putNumber("pose x", m_odometry.getPoseMeters().getTranslation().getX());
@@ -337,7 +337,11 @@ public class DriveSubsystem extends SubsystemBase {
    * Zeroes the heading of the robot.
    */
   public void zeroHeading() {
-    m_gyro.reset(); // RDB2020 - I replace this call with the below 5 lines...
+    m_gyro.reset();
+
+    // according to wpilib docs, any time you reset the gyro the 'resetPose' method MUST be called
+    // with the new gryo angle
+    m_odometry.resetPosition(m_odometry.getPoseMeters(), Rotation2d.fromDegrees(0));
 
     //logger.info("<b>DriveSubsystem</b>: zeroGyro started");
     //m_gyro.setAngleAdjustment(0);
