@@ -59,5 +59,4 @@ public class H3_Bounce extends _DelayableStrafingAutoMode {
         // Run path following command, then stop at the end.
         command = commandGroup.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
     }
-
 }  
