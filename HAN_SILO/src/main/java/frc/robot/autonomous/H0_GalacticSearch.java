@@ -62,7 +62,9 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
                             new IntakeSeqCommand(m_intake, m_sequence, true).withTimeout(6),
                             createSwerveCommand(m_robotDrive, "RedA: entire path", 180.0, redATrajectory)
                         ),
-                        new IntakeRetract(m_intake)
+                        new IntakeRetract(m_intake),
+                        new ShootSeqCommandAuto(m_shootclimb, m_sequence).withTimeout(5)
+
                     );
                 } catch (IOException ex){
                     //System.out.println("Path not found: "+redATrajectoryPath);
@@ -90,7 +92,9 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
                             new IntakeSeqCommand(m_intake, m_sequence, true).withTimeout(6),
                             createSwerveCommand(m_robotDrive, "RedB: entire path", 180, redBTrajectory)
                         ),
-                        new IntakeRetract(m_intake)
+                        new IntakeRetract(m_intake),
+                        new ShootSeqCommandAuto(m_shootclimb, m_sequence).withTimeout(5)
+
                     );
                 } catch (IOException ex){
                     System.out.println("Path not found: "+redBTrajectoryPath);
@@ -116,7 +120,9 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
                             new IntakeSeqCommand(m_intake, m_sequence, true).withTimeout(6),
                             createSwerveCommand(m_robotDrive, "BlueA: entire path", 180, blueATrajectory)
                         ),
-                        new IntakeRetract(m_intake)     
+                        new IntakeRetract(m_intake),
+                        new ShootSeqCommandAuto(m_shootclimb, m_sequence).withTimeout(5)
+     
                     );
                 } catch (IOException ex){
                     System.out.println("Path not found: "+blueATrajectoryPath);
@@ -143,7 +149,8 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
                             new IntakeSeqCommand(m_intake, m_sequence, true).withTimeout(6),
                             createSwerveCommand(m_robotDrive, "BlueB: entire path", 180, blueBTrajectory)
                         ),
-                        new IntakeRetract(m_intake)
+                        new IntakeRetract(m_intake),
+                        new ShootSeqCommandAuto(m_shootclimb, m_sequence).withTimeout(5)
                     );
                 } catch (IOException ex){
                     System.out.println("Path not found: "+blueBTrajectoryPath);
@@ -153,6 +160,6 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
                 break;
         }       
         // Run path following command, then stop at the end.
-        command = commandGroup.andThen(() -> m_robotDrive.drive(0, 0, 0, false)).andThen(new ShootSeqCommandAuto(m_shootclimb, m_sequence).withTimeout(2)).andThen(() -> m_shootclimb.stopShooting());
+        command = commandGroup.andThen(() -> m_robotDrive.drive(0, 0, 0, false)).andThen(() -> m_shootclimb.stopShooting());
     }
 }  
