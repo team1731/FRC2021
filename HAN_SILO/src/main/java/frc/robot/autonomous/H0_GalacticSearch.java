@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.IntakeExtend;
 import frc.robot.commands.IntakeRetract;
 import frc.robot.commands.IntakeSeqCommand;
 import frc.robot.commands.ShootSeqCommandAuto;
@@ -39,39 +38,32 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
     }
 
     public H0_GalacticSearch(DriveSubsystem m_robotDrive, IntakeSubsystem m_intake, SequencerSubsystem m_sequence,
-    LimeLightSubsystem m_limelight, ShootClimbSubsystem m_shootclimb) {
+                             LimeLightSubsystem m_limelight, ShootClimbSubsystem m_shootclimb) {
+
         SequentialCommandGroup commandGroup = null;
         Pose2d initialPoseTrajectory;
         field_orientation = m_limelight.getFieldOrientation(); 
         Path trajectoryPath = null;
         String trajectoryName = "";
+
         switch(field_orientation){
             case 0: //Red A (C3, D5, A6)
-                SmartDashboard.putString("SelectedGalactic", "RedA");
-                System.out.println("\nConstructing RedA auto\n");
-                trajectoryName = "RedA: entire path";
-                trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("paths/output/RedPathA.wpilib.json");
+                trajectoryName = "RedPathA";
                 break;
             case 1: //Red B (B3, D5, B7)
-                SmartDashboard.putString("SelectedGalactic", "RedB");
-                System.out.println("\nConstructing RedB auto\n");
-                trajectoryName = "RedB: entire path";
-                trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("paths/output/RedPathB.wpilib.json");
+                trajectoryName = "RedPathB";
                 break;
             case 2: //Blue A (E6, B7, C9)
-                SmartDashboard.putString("SelectedGalactic", "BlueA");
-                System.out.println("\nConstructing BlueA auto\n");
-                trajectoryName = "BlueA: entire path";
-                trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("paths/output/BluePathA.wpilib.json");
+                trajectoryName = "BluePathA";
                 break;
             case 3: //Blue B (D6, B8, D10)
-                SmartDashboard.putString("SelectedGalactic", "BlueB");
-                System.out.println("\nConstructing BlueB auto\n");
-                trajectoryName = "BlueB: entire path";
-                trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("paths/output/BluePathB.wpilib.json");
+                trajectoryName = "BluePathB";
                 break;
         }       
         try {
+            SmartDashboard.putString("SelectedGalactic", trajectoryName);
+            System.out.println("\nConstructing " + trajectoryName + " auto\n");
+            trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("paths/output/" + trajectoryName + ".wpilib.json");
             Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
 
             initialPoseTrajectory = trajectory.getInitialPose();
