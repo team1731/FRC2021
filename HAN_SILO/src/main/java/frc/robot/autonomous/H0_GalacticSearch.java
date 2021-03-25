@@ -41,11 +41,10 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
                              LimeLightSubsystem m_limelight, ShootClimbSubsystem m_shootclimb) {
 
         SequentialCommandGroup commandGroup = null;
-        Pose2d initialPoseTrajectory;
-        field_orientation = m_limelight.getFieldOrientation(); 
         Path trajectoryPath = null;
         String trajectoryName = "";
 
+        field_orientation = m_limelight.getFieldOrientation(); 
         switch(field_orientation){
             case 0: trajectoryName =  "RedPathA"; break; // Red A (C3, D5, A6)
             case 1: trajectoryName =  "RedPathB"; break; // Red B (B3, D5, B7)
@@ -58,7 +57,7 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
             trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("paths/output/" + trajectoryName + ".wpilib.json");
             Trajectory trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
 
-            initialPoseTrajectory = trajectory.getInitialPose();
+            Pose2d initialPoseTrajectory = trajectory.getInitialPose();
             initialPose = new Pose2d(initialPoseTrajectory.getX(), initialPoseTrajectory.getY(), Rotation2d.fromDegrees(180.0));
 
             m_robotDrive.resetOdometry(initialPose); //because PathWeaver path uses absolute field coords
@@ -77,6 +76,7 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
         } finally {
             System.out.println("Path: " + trajectoryPath);
         }
+        
         // Run path following command, then stop at the end.
         command = commandGroup.andThen(() -> m_robotDrive.drive(0, 0, 0, false)).andThen(() -> m_shootclimb.stopShooting());
     }
