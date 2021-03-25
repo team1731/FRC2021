@@ -47,18 +47,10 @@ public class H0_GalacticSearch extends _DelayableStrafingAutoMode {
         String trajectoryName = "";
 
         switch(field_orientation){
-            case 0: //Red A (C3, D5, A6)
-                trajectoryName = "RedPathA";
-                break;
-            case 1: //Red B (B3, D5, B7)
-                trajectoryName = "RedPathB";
-                break;
-            case 2: //Blue A (E6, B7, C9)
-                trajectoryName = "BluePathA";
-                break;
-            case 3: //Blue B (D6, B8, D10)
-                trajectoryName = "BluePathB";
-                break;
+            case 0: trajectoryName =  "RedPathA"; break; // Red A (C3, D5, A6)
+            case 1: trajectoryName =  "RedPathB"; break; // Red B (B3, D5, B7)
+            case 2: trajectoryName = "BluePathA"; break; //Blue A (E6, B7, C9)
+            case 3: trajectoryName = "BluePathB"; break; //Blue B (D6, B8, D10)
         }       
         try {
             SmartDashboard.putString("SelectedGalactic", trajectoryName);
