@@ -58,7 +58,7 @@ public class Robot extends TimedRobot {
   public Robot() {
      addPeriodic(() -> {
        if(m_robotDrive != null) m_robotDrive.updateOdometry();
-     }, 0.005, 0.0);
+     }, 0.020, 0.0);  // was 0.005
   }
 
 

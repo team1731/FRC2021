@@ -28,13 +28,12 @@ public class H3_Bounce extends _DelayableStrafingAutoMode {
         String trajectoryJSON1 = "paths/output/Bounce1.wpilib.json";
         String trajectoryJSON2 = "paths/output/Bounce2.wpilib.json";
         String trajectoryJSON3 = "paths/output/Bounce3.wpilib.json";
-       String trajectoryJSON4 = "paths/output/Bounce4.wpilib.json";
 
         Trajectory trajectory0 = new Trajectory();
-         Trajectory trajectory1 = new Trajectory();
-         Trajectory trajectory2 = new Trajectory();
-         Trajectory trajectory3 = new Trajectory();
-        Trajectory trajectory4 = new Trajectory();
+        Trajectory trajectory1 = new Trajectory();
+        Trajectory trajectory2 = new Trajectory();
+        Trajectory trajectory3 = new Trajectory();
+
         try {
             Path traj0Path = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON0);
             trajectory0 = TrajectoryUtil.fromPathweaverJson(traj0Path);
@@ -44,47 +43,20 @@ public class H3_Bounce extends _DelayableStrafingAutoMode {
             trajectory2 = TrajectoryUtil.fromPathweaverJson(traj2Path);
             Path traj3Path = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON3);
             trajectory3 = TrajectoryUtil.fromPathweaverJson(traj3Path);
-            Path traj4Path = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON4);
-            trajectory4 = TrajectoryUtil.fromPathweaverJson(traj4Path);
         } catch (IOException ex) {
             DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON0, ex.getStackTrace());
         }
+
         Pose2d initialPoseTrajectory = trajectory0.getInitialPose();
         initialPose = new Pose2d(initialPoseTrajectory.getX(), initialPoseTrajectory.getY(), Rotation2d.fromDegrees(90));
 
         m_robotDrive.resetOdometry(initialPose); //because PathWeaver path uses absolute field coords
         SequentialCommandGroup commandGroup = new SequentialCommandGroup(new WaitCommand(getInitialDelaySeconds()),
-                createSwerveCommand(m_robotDrive, "Bounce: entire path", 90, trajectory0),
-
-                createSwerveCommand(m_robotDrive, "Bounce: start zone to A3", 90, trajectory1),
-                 createSwerveCommand(m_robotDrive, "Bounce: A3 to A6", 90, trajectory2),
-                 createSwerveCommand(m_robotDrive, "Bounce: A6 to A9", 90, trajectory3));
-
-
-                // createSwerveCommand(m_robotDrive, "Bounce: start zone to A3",
-                // TrajectoryDirection.REV,
-                // TrajectoryHeading.CONVERT_TO_METERS, 0, new double[][] { //these are INCHES
-                // {0.0, 0.0, -90}, //NOTE: robot starts with its +x (longitudinal) axis aligned
-                // with field +x axis (facing the right side)
-                // { 0, -10},
-                // { 10, -20},
-                // { 20, -30},
-                // { 30, -35},
-                // { 40, -40},
-                // { 50, -45},
-                // { 60, -50, 0} //A3 pylon
-                // })
-
-
-                // createSwerveCommand(m_robotDrive, "Bounce: A3 to A6", TrajectoryDirection.REV,
-                //         TrajectoryHeading.CONVERT_TO_METERS, 0, new double[][] { // these are INCHES
-                //                 { 60, -50, 0 }, // A3 pylon
-
-                //                 { -30, -80 }, { -60, -110 }, // low point
-                //                 { -30, -140 },
-
+                createSwerveCommand(m_robotDrive, "Bounce: start to A3", 90, trajectory0),
+                createSwerveCommand(m_robotDrive, "Bounce: A3 to A6", 90, trajectory1),
+                createSwerveCommand(m_robotDrive, "Bounce: A6 to A9", 90, trajectory2),
+                createSwerveCommand(m_robotDrive, "Bounce: A9 to end", 90, trajectory3));
         command = commandGroup.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
     }
-
-}  
+}
 

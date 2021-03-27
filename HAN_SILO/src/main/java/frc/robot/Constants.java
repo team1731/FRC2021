@@ -75,7 +75,7 @@ public final class Constants {
 
     public static final double kMaxSpeedMetersPerSecond = 3;   //tune
 
-    public static final double kTurnP = 0.05;
+    public static final double kTurnP = 0.1;  // was 0.05
     public static final double kTurnI = 0;
     public static final double kTurnD = 0;
 
