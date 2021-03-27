@@ -151,7 +151,7 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     resumeCSVWriter();
-
+    
     // Update the odometry in the periodic block
     double headingRadians = Math.toRadians(getHeading());
     m_odometry.update(
@@ -353,6 +353,13 @@ public class DriveSubsystem extends SubsystemBase {
     return heading;
   }
 
+  public double getXaccel() {
+    return m_gyro.getWorldLinearAccelX()/9.8066;
+  }
+
+  public double getYaccel() {
+    return m_gyro.getWorldLinearAccelY()/9.8066;
+  }
   /**
    * Returns the turn rate of the robot.
    *
@@ -421,5 +428,13 @@ public class DriveSubsystem extends SubsystemBase {
       m_gyro.reset();
     }
   }
+
+public double getXVelocity() {
+return 0;
+}
+
+public double getYVelocity() {
+	return 0;
+}
 
 }
