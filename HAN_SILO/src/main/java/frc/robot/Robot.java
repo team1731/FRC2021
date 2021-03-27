@@ -42,6 +42,7 @@ public class Robot extends TimedRobot {
   private _NamedAutoMode namedAutoMode;
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
+  private Integer fieldOrientation;
 
   // The robot's subsystems
   public DriveSubsystem m_robotDrive;
@@ -54,19 +55,27 @@ public class Robot extends TimedRobot {
 
   String autoCode = AutoConstants.kDEFAULT_AUTO_CODE;
 
-  private void initSubsystems(){
+  public Robot() {
+     addPeriodic(() -> {
+       if(m_robotDrive != null) m_robotDrive.updateOdometry();
+     }, 0.005, 0.0);
+  }
+
+
+  private void initSubsystems() {
     // initial SubSystems to at rest states
     m_robotDrive.resetEncoders();
     m_intake.retract();
     m_sequencer.stop();
     m_shootclimb.stopShooting();
-    //m_colorwheel.init();
-    //LEDs are not attached currently
-    //m_ledstring.init();
+    // m_colorwheel.init();
+    // LEDs are not attached currently
+    // m_ledstring.init();
   }
 
-  private void autoInitPreload(){
+  private void autoInitPreload() {
     System.out.println("autoInitPreload: Start");
+    m_autonomousCommand = null;
     m_robotDrive.resetOdometry(new Pose2d());
     m_ledstring.option(LedOption.RAINBOW);
 
@@ -85,33 +94,33 @@ public class Robot extends TimedRobot {
 
     m_autonomousCommand = null;
     namedAutoMode = m_robotContainer.getNamedAutonomousCommand(autoCode);
-    if(namedAutoMode != null){
+    if (namedAutoMode != null) {
       System.out.println("autoInitPreload: getCommand Auto Begin");
       m_autonomousCommand = namedAutoMode.getCommand();
       System.out.println("autoInitPreload: getCommand Auto Complete");
-    }
-    else{
+    } else {
       System.err.println("UNABLE TO EXECUTE SELECTED AUTONOMOUS MODE!!");
     }
     System.out.println("autoInitPreload: End");
   }
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
    */
   @Override
   public void robotInit() {
-    
+
     CameraServer camServer = CameraServer.getInstance();
     camServer.startAutomaticCapture();
-    
+
     m_ledstring = new LedStringSubsystem();
     m_vision = new LimeLightSubsystem();
     m_robotDrive = new DriveSubsystem(m_vision);
-    m_intake = new IntakeSubsystem(m_ledstring);
+    m_intake = new IntakeSubsystem(/*m_ledstring*/);
     m_sequencer = new SequencerSubsystem(m_ledstring);
     m_shootclimb = new ShootClimbSubsystem(m_ledstring);
-    m_colorwheel = null; //new ColorWheelSubsystem();
+    m_colorwheel = null; // new ColorWheelSubsystem();
 
     m_robotDrive.zeroHeading();
 
@@ -128,23 +137,23 @@ public class Robot extends TimedRobot {
     if (RobotBase.isReal()) {
       autoCode = SmartDashboard.getString("AUTO CODE", autoCode);
     }
-        
+
     autoInitPreload();
-    
+
     SmartDashboard.putBoolean("Vis_HasTarget", false);
     SmartDashboard.putNumber("Vis_TargetAngle", 0);
     
     //Report Build Information to the SmartDashboard
     try {
-      File branchInfo = new File(Filesystem.getDeployDirectory()+"/DeployedBranchInfo~.txt");
+      File branchInfo = new File(Filesystem.getDeployDirectory() + "/DeployedBranchInfo~.txt");
       Scanner reader = new Scanner(branchInfo);
       String fullText = "";
-      while(reader.hasNext()){
+      while (reader.hasNext()) {
         fullText += reader.nextLine();
       }
       SmartDashboard.putString("Build Info", fullText);
       reader.close();
-    } catch (FileNotFoundException fnf){
+    } catch (FileNotFoundException fnf) {
       SmartDashboard.putString("Build Info", "N/A");
       System.err.println("DeployedBranchInfo~.txt not found");
       fnf.printStackTrace();
@@ -162,9 +171,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    // Runs the Scheduler. This is responsible for polling buttons, adding newly-scheduled
-    // commands, running already-scheduled commands, removing finished or interrupted commands,
-    // and running subsystem periodic() methods. This must be called from the robot's periodic
+    // Runs the Scheduler. This is responsible for polling buttons, adding
+    // newly-scheduled
+    // commands, running already-scheduled commands, removing finished or
+    // interrupted commands,
+    // and running subsystem periodic() methods. This must be called from the
+    // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
 
@@ -183,18 +195,30 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {
     m_ledstring.option(LedOption.TEAM);
     m_robotDrive.resetEncoders();
-    if(System.currentTimeMillis() % 100 == 0){
-      SmartDashboard.putBoolean("LowSensor",  m_sequencer.lowSensorHasBall());
-      SmartDashboard.putBoolean("MidSensor",  m_sequencer.midSensorHasBall());
-      SmartDashboard.putBoolean("HighSensor",  m_sequencer.highSensorHasBall());
+    if (System.currentTimeMillis() % 100 == 0) {
+      SmartDashboard.putBoolean("LowSensor", m_sequencer.lowSensorHasBall());
+      SmartDashboard.putBoolean("MidSensor", m_sequencer.midSensorHasBall());
+      SmartDashboard.putBoolean("HighSensor", m_sequencer.highSensorHasBall());
     }
 
     if (RobotBase.isReal()) {
       String newCode = SmartDashboard.getString("AUTO CODE", autoCode);
-      if (!newCode.equals(autoCode)){
+      if (!newCode.equals(autoCode)) {
         autoCode = newCode;
         System.out.println("New Auto Code read from dashboard - initializing.");
         autoInitPreload();
+      }
+      if(m_autonomousCommand != null){
+        if(m_autonomousCommand.getName().startsWith("H0")){
+          Integer newFieldOrientation = namedAutoMode.getFieldOrientation();
+          if(newFieldOrientation != null){
+            if(!newFieldOrientation.equals(fieldOrientation)){
+              System.out.println("New Field Orientation detected by LimeLight - initializing.");
+              fieldOrientation = newFieldOrientation;
+              autoInitPreload();
+            }
+          }
+        }
       }
     }
   }
@@ -220,6 +244,7 @@ public class Robot extends TimedRobot {
       Pose2d initialPose = namedAutoMode.getInitialPose();
       if(initialPose != null){
         m_robotDrive.resetOdometry(initialPose);
+        System.out.println("Initial Pose: "+initialPose.toString());
       }
       m_autonomousCommand.schedule();
     }
