@@ -68,6 +68,7 @@ public class DriveSubsystem extends SubsystemBase {
   private double driveSpeedScaler = 1.0;
 
   private Double lockedHeading = null;
+  private double m_heading;
 
   //Robot swerve modules
   private final SwerveModule m_leftFront = 
@@ -92,8 +93,19 @@ public class DriveSubsystem extends SubsystemBase {
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
   // Odometry class for tracking robot pose
-  SwerveDriveOdometry m_odometry =
+  private SwerveDriveOdometry m_odometry =
       new SwerveDriveOdometry(DriveConstants.kDriveKinematics, getAngle());
+
+  public void updateOdometry(){
+    if(m_odometry != null){
+      m_odometry.update(
+        new Rotation2d(Math.toRadians(getHeading())),
+        m_leftFront.getState(),              // leftFront, rightFront, leftRear, rightRear
+        m_rightFront.getState(),
+        m_leftRear.getState(),
+        m_rightRear.getState());
+    }
+  }
 
   /**
    * Creates a new DriveSubsystem.
@@ -153,19 +165,13 @@ public class DriveSubsystem extends SubsystemBase {
     resumeCSVWriter();
     
     // Update the odometry in the periodic block
-    double headingRadians = Math.toRadians(getHeading());
-    m_odometry.update(
-        new Rotation2d(headingRadians),
-        m_leftFront.getState(),              // leftFront, rightFront, leftRear, rightRear
-        m_rightFront.getState(),
-        m_leftRear.getState(),
-        m_rightRear.getState());
-        
+   // updateOdometry();
+
     if(Robot.doSD()){
       SmartDashboard.putNumber("pose x", m_odometry.getPoseMeters().getTranslation().getX());
       SmartDashboard.putNumber("pose y", m_odometry.getPoseMeters().getTranslation().getY());
       SmartDashboard.putNumber("rot deg", m_odometry.getPoseMeters().getRotation().getDegrees());
-      SmartDashboard.putNumber("heading radians", headingRadians);    
+      SmartDashboard.putNumber("heading radians", Math.toRadians(getHeading()));    
       SmartDashboard.putNumber("raw gyro", m_gyro.getAngle());
       SmartDashboard.putBoolean("gyro is calibrating", m_gyro.isCalibrating());
     }
@@ -346,11 +352,13 @@ public class DriveSubsystem extends SubsystemBase {
    * @return the robot's heading in degrees, from -180 to 180
    */
   public double getHeading() {
-    double heading = Math.IEEEremainder(m_gyro.getAngle(), 360) * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
-    if(System.currentTimeMillis() % 100 == 0){  
-      SmartDashboard.putNumber("Heading", heading);
+    if(m_gyro != null){
+      m_heading = Math.IEEEremainder(m_gyro.getAngle(), 360) * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+      if(System.currentTimeMillis() % 100 == 0){  
+        SmartDashboard.putNumber("Heading", m_heading);
+      }
     }
-    return heading;
+    return m_heading;
   }
 
   public double getXaccel() {
